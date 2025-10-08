@@ -22,7 +22,6 @@ import {
     Footprints,
     Globe,
     Heart,
-    Linkedin,
     Mail,
     Map,
     MapPin,
