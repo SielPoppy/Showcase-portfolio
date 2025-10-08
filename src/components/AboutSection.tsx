@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Badge } from './ui/badge';
-import { Card, CardContent } from './ui/card';
-import { Globe, Gamepad2, Dumbbell, Home } from 'lucide-react';
+import { CardContent } from './ui/card';
+import { Globe, Gamepad2, Dumbbell, Home, BookOpen } from 'lucide-react';
+import { useIsMobile } from './ui/use-mobile';
 
 interface Hobby {
   name: string;
@@ -40,11 +41,34 @@ const hobbies: Hobby[] = [
         "My plan for later on is to create my own devices to make even more things automated and easier to use.",
     skills: ["IoT Integration", "Automation", "Network Setup", "Hardware Integration"],
     color: "bg-purple-100 text-purple-800 border-purple-300"
+  },
+  {
+    name: "Education",
+    icon: <BookOpen className="w-4 h-4" />,
+    description: "Lifelong learner — I enjoy following courses, reading research papers, and mentoring others to help them grow.",
+    skills: ["Teaching", "Curriculum design", "Continuous learning", "Mentorship"],
+    color: "bg-yellow-100 text-yellow-800 border-yellow-300"
   }
 ];
 
 export function AboutSection() {
   const [activeHobby, setActiveHobby] = useState<number | null>(null);
+  const isMobile = useIsMobile();
+  const wrappersRef = useRef<Array<HTMLDivElement | null>>([]);
+
+  useEffect(() => {
+    function onPointerDown(e: PointerEvent) {
+      if (activeHobby === null) return;
+      const wrapper = wrappersRef.current[activeHobby];
+      if (!wrapper) return;
+      if (!wrapper.contains(e.target as Node)) {
+        setActiveHobby(null);
+      }
+    }
+
+    document.addEventListener('pointerdown', onPointerDown);
+    return () => document.removeEventListener('pointerdown', onPointerDown);
+  }, [activeHobby]);
 
   return (
     <section id="about" className="relative z-10 py-16 px-6 bg-white/50 backdrop-blur-sm">
@@ -60,11 +84,9 @@ export function AboutSection() {
         
         <div className="flex flex-wrap justify-center gap-3">
           {hobbies.map((hobby, index) => (
-            <div key={index} className="relative">
+            <div key={index} className="relative" ref={(el) => (wrappersRef.current[index] = el)}>
               <Badge
                 className={`${hobby.color} border cursor-pointer hover:scale-105 transition-all duration-200 flex items-center gap-2 px-3 py-2 text-sm font-medium`}
-                onMouseEnter={() => setActiveHobby(index)}
-                onMouseLeave={() => setActiveHobby(null)}
                 onClick={() => setActiveHobby(activeHobby === index ? null : index)}
               >
                 {hobby.icon}
@@ -73,11 +95,50 @@ export function AboutSection() {
               
               {/* Tooltip/Popup */}
               {activeHobby === index && (
-                <Card className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-80 z-50 shadow-xl border-2 bg-white/95 backdrop-blur-sm">
+                <div
+                  className="z-50"
+                  style={isMobile
+                    ? {
+                        position: 'fixed',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        width: '90vw',
+                        maxWidth: '90vw',
+                        maxHeight: '80vh',
+                        overflowY: 'auto',
+                        background: 'rgba(255,255,255,0.95)',
+                        borderRadius: '0.75rem',
+                        boxShadow: '0 8px 32px rgba(0,0,0,0.15)',
+                        backdropFilter: 'blur(6px)',
+                      }
+                    : {
+                        position: 'absolute',
+                        bottom: 'calc(100% + 0.5rem)',
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        width: '20rem',
+                        maxWidth: '20rem',
+                        background: 'rgba(255,255,255,0.95)',
+                        borderRadius: '0.75rem',
+                        boxShadow: '0 8px 32px rgba(0,0,0,0.15)',
+                        backdropFilter: 'blur(6px)',
+                      }
+                  }
+                >
                   <CardContent className="p-4 space-y-3">
                     <div className="flex items-center gap-2">
                       {hobby.icon}
                       <h3 className="font-semibold text-black">{hobby.name}</h3>
+                      {isMobile && (
+                        <button
+                          className="ml-auto text-gray-500 hover:text-black text-lg font-bold"
+                          onClick={() => setActiveHobby(null)}
+                          aria-label="Close"
+                        >
+                          ×
+                        </button>
+                      )}
                     </div>
                     <p className="text-sm text-gray-700 leading-relaxed">
                       {hobby.description}
@@ -99,7 +160,7 @@ export function AboutSection() {
                       </div>
                     </div>
                   </CardContent>
-                </Card>
+                </div>
               )}
             </div>
           ))}
