@@ -55,6 +55,7 @@ export function AboutSection() {
   const [activeHobby, setActiveHobby] = useState<number | null>(null);
   const isMobile = useIsMobile();
   const wrappersRef = useRef<Array<HTMLDivElement | null>>([]);
+  const [measuredWidth, setMeasuredWidth] = useState<number | null>(null);
 
   
   const [columns, setColumns] = useState<number>(() => {
@@ -84,15 +85,43 @@ export function AboutSection() {
     return () => document.removeEventListener('pointerdown', onPointerDown);
   }, [activeHobby]);
 
+  // Measure all badge wrapper widths and keep the maximum so all badges can be set to the same width
+  useEffect(() => {
+    function measure() {
+      try {
+        const widths = wrappersRef.current.map((el) => (el ? el.offsetWidth : 0));
+        const max = widths.length ? Math.max(...widths) : 0;
+        if (max && max !== measuredWidth) {
+          setMeasuredWidth(max);
+        }
+      } catch (err) {
+        // ignore measurement errors for now
+      }
+    }
+
+    // measure on next tick to allow layout to settle
+    const id = window.setTimeout(measure, 0);
+    window.addEventListener('resize', measure);
+    return () => {
+      window.clearTimeout(id);
+      window.removeEventListener('resize', measure);
+    };
+  }, [columns, hobbies.length, measuredWidth]);
+
   
   const renderBadge = (index: number) => {
     const hobby = hobbies[index];
     if (!hobby) return null;
 
     return (
-      <div key={index} className="relative w-max mb-12 md:mb-0 shrink-0" ref={(el) => (wrappersRef.current[index] = el)}>
+      <div
+        key={index}
+        className="relative mb-12 md:mb-0 shrink-0"
+        ref={(el) => { wrappersRef.current[index] = el }}
+        style={measuredWidth ? (columns === 1 ? { width: `${measuredWidth}px`, margin: '0 auto' } : { width: `${measuredWidth}px` }) : undefined}
+      >
         <Badge
-          className={`${hobby.color} border cursor-pointer hover:scale-105 transition-all duration-200 flex items-center gap-3 px-4 py-3 text-base font-medium`}
+          className={`${hobby.color} border cursor-pointer hover:scale-105 transition-all duration-200 flex items-center justify-center gap-3 px-4 py-3 text-base font-medium w-full`}
           onClick={() => setActiveHobby(activeHobby === index ? null : index)}
         >
           {hobby.icon}
@@ -199,7 +228,7 @@ export function AboutSection() {
               /* Use auto-sized columns and a small gap so pairs sit just a small distance apart */
               /* Very small gap between the two columns to make the pair almost touch */
               /* 2px gap keeps a visible separation while being extremely tight */
-              #about-grid { display: grid !important; grid-template-columns: auto auto !important; column-gap: 2px !important; row-gap: 3.25rem !important; padding-left: 0.5rem !important; padding-right: 0.5rem !important; justify-content: center !important; }
+              #about-grid { display: grid !important; grid-template-columns: auto auto !important; column-gap: 12px !important; row-gap: 3.25rem !important; padding-left: 0.5rem !important; padding-right: 0.5rem !important; justify-content: center !important; }
               /* Align left-column children to the end and right-column children to the start so pairs sit toward the center */
               #about-grid .about-cell.start { justify-self: end !important; }
               #about-grid .about-cell.end { justify-self: start !important; }
@@ -212,13 +241,33 @@ export function AboutSection() {
             style={{
               display: 'grid',
               /* For desktop, use auto-sized columns so badges hug their content; use a tiny gap between them */
-              gridTemplateColumns: columns === 2 ? 'auto auto' : '1fr',
-              columnGap: columns === 2 ? '2px' : '0',
-              rowGap: columns === 2 ? '3.25rem' : '2.5rem',
+              gridTemplateColumns: columns === 2 ? (measuredWidth ? `${measuredWidth}px ${measuredWidth}px` : 'auto auto') : '1fr',
+                columnGap: columns === 2 ? '12px' : '0',
+                rowGap: columns === 2 ? '3.25rem' : '2.5rem',
               paddingLeft: '0.5rem',
               paddingRight: '0.5rem',
-              justifyContent: columns === 2 ? 'center' : 'stretch',
+              // Always center the grid so single-column/mobile items are centered as well
+              justifyContent: 'center',
               // Slightly smaller explicit bottom padding to ensure a bit less space below the last badge
               paddingBottom: '1rem'
             }}
+          >
+            {/* Render each hobby into a grid cell. For two-column layouts we align left/right cells toward the center. */}
+            {hobbies.map((_, idx) => {
+              const isLastAndOdd = columns === 2 && idx === hobbies.length - 1 && hobbies.length % 2 === 1;
+              const positionClass = columns === 2 ? (isLastAndOdd ? 'center' : (idx % 2 === 0 ? 'start' : 'end')) : 'center';
 
+              return (
+                <div key={idx} className={`about-cell ${positionClass}`}>
+                  {renderBadge(idx)}
+                </div>
+              );
+            })}
+          </div>
+          {/* Extra spacer to increase vertical gap between the final hobby badge and the next section */}
+          <div aria-hidden style={{ height: '12rem', minHeight: '12rem' }} />
+        </div>
+      </div>
+    </section>
+  );
+}

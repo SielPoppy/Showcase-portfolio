@@ -7,6 +7,19 @@ interface State {
 }
 
 export default class ErrorBoundary extends React.Component<React.PropsWithChildren<{}>, State> {
+  // Explicitly declare instance `props` so `this.props` is recognized by TS
+  // Use definite assignment because React provides the value.
+  public props!: React.PropsWithChildren<{}>;
+
+  // Re-introduce the instance `state` property so TS knows it exists.
+  // Use definite assignment because we initialize it in the constructor.
+  public state!: State;
+
+  // Declare the setState type so any consumer or internal usage is typed correctly
+  // without accidentally shadowing React.Component.setState implementation.
+  // `declare` tells TypeScript this member exists and is provided by React.
+  declare setState: React.Component<React.PropsWithChildren<{}>, State>["setState"];
+
   constructor(props: React.PropsWithChildren<{}>) {
     super(props);
     this.state = { hasError: false, error: null, info: null };
@@ -48,4 +61,3 @@ export default class ErrorBoundary extends React.Component<React.PropsWithChildr
     return this.props.children as React.ReactElement;
   }
 }
-

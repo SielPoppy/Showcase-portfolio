@@ -40,17 +40,18 @@ export function SideNavbar() {
 
           
           if (set.size === 0) {
-            let closest: HTMLElement | null = null;
+            // Find nearest section by distance to top and return its id
+            let closestId: string | null = null;
             let minDist = Infinity;
             sections.forEach((s) => {
               const rect = s.getBoundingClientRect();
               const dist = Math.abs(rect.top);
               if (dist < minDist) {
                 minDist = dist;
-                closest = s;
+                closestId = s.id || s.getAttribute('id') || null;
               }
             });
-            if (closest) return [closest.id];
+            if (closestId) return [closestId];
           }
 
           return Array.from(set);
@@ -78,10 +79,14 @@ export function SideNavbar() {
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
-      element.scrollIntoView({ 
-        behavior: 'smooth',
-        block: 'start'
-      });
+      // Scroll with a small upward offset so the target sits slightly higher
+      // on the viewport. This helps for sections that have top spacing or
+      // when a fixed header/decoration overlays the top.
+      // Apply a slightly larger offset for the 'about' section specifically.
+      const offset = sectionId === 'about' ? 200 : 64; // px, tweakable
+      const rect = element.getBoundingClientRect();
+      const target = window.pageYOffset + rect.top - offset;
+      window.scrollTo({ top: target, behavior: 'smooth' });
     }
   };
 

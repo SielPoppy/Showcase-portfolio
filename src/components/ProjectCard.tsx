@@ -19,102 +19,67 @@ type Props = {
 export default function ProjectCard({ project, onOpenVideo, onOpenImages }: Props) {
   // defensive: ensure skills is always an array to avoid runtime errors
   const skillsArr: string[] = Array.isArray(project.skills) ? project.skills : [];
-  const isShowcase = (src: string) => src.includes('/images/projects/showcase');
-  const nonLogoImagesFromImages = (project.images || []).filter((img: any) => !img.src.includes('/images/companies/'));
-  const allProjectImages = (project.projectImages || []).concat(nonLogoImagesFromImages);
-  const showcaseImagesArr = allProjectImages.filter((img: any) => isShowcase(img.src));
-  const nonShowcaseImages = allProjectImages.filter((img: any) => !isShowcase(img.src));
-  const showcaseImage = showcaseImagesArr.length > 0 ? showcaseImagesArr[0] : null;
 
+  // Build the array of non-logo images (used for the "View Images" action)
+  const allProjectImages = [...(project.projectImages || []), ...(project.images || [])].filter((img: any) => !img.src?.includes('/images/companies/'));
+
+  // Company logo (the only image we render in the top box now)
+  const companyLogo = (project.images || []).find((img: any) => img.src?.includes('/images/companies/')) || null;
+
+  // When the top box is clicked: prefer opening images, otherwise fallback to video
   const handleImageClick = () => {
-    const combined = [...showcaseImagesArr, ...nonShowcaseImages];
-    if (combined.length > 0) {
-      onOpenImages(combined);
+    if (allProjectImages.length > 0) {
+      onOpenImages(allProjectImages);
     } else if (project.videoId) {
       onOpenVideo({ url: `https://www.youtube.com/embed/${project.videoId}`, title: project.company, description: project.description });
     }
   };
 
-  const hasShowcase = Boolean(showcaseImage);
-  const isYookrIntern = project.company === 'Yookr' && project.type === 'internship';
-  // company-specific tweaks: make BDO and Fontys logos larger and their inline showcase images a bit smaller
-  const isBdo = project.company === 'BDO';
-  const isFontys = project.company === 'Fontys';
-  const isLargeLogo = isBdo || isFontys;
-  // logo classes: Yookr-intern keeps its larger logo; BDO/Fontys get a medium-large logo; others keep the small default
-  const logoClass = isYookrIntern
-    ? "h-20 md:h-24 w-auto object-contain rounded-md shadow-sm"
-    : isLargeLogo
-    ? "h-12 md:h-20 w-auto object-contain rounded-md shadow-sm"
-    : "h-8 w-auto object-contain rounded-md shadow-sm";
-  // non-showcase logo (used when there's no showcase image) — make BDO/Fontys noticeably larger here too
-  const logoClassNonShowcase = isLargeLogo ? "h-16 w-auto object-contain rounded-md shadow-sm" : "h-12 w-auto object-contain rounded-md shadow-sm";
-  
-  const defaultImageClass = isYookrIntern ? "max-h-[12rem] w-full object-contain rounded-md shadow-md" : "max-h-[14rem] w-full object-cover rounded-md shadow-md";
-  const smallImageClass = "max-h-[11rem] w-full object-cover rounded-md shadow-md";
-  const companyLogo = project.images?.find((img: any) => img.src.includes('/images/companies/')) || null;
+  const logoContainerClass = "relative bg-white flex items-center justify-center cursor-pointer w-full h-[350px] overflow-hidden";
+  const logoInnerBox = "flex items-center justify-center w-full h-full p-3 bg-white flex-shrink-0 overflow-hidden";
+  // Use auto width/height with max constraints so small images keep their intrinsic size
+  // and are centered by the parent flex container instead of being upscaled.
+  const logoImgClass = "block w-auto h-auto max-w-full max-h-full object-contain rounded-md shadow-sm";
 
   return (
     <div>
 
       <Card className="relative z-50 group hover:shadow-2xl transition-all duration-300 border-2 border-gray-200 bg-white hover:border-pink-300 overflow-hidden cursor-pointer max-w-full">
-        {hasShowcase ? (
-          
-          <div
-            className={isYookrIntern ? "aspect-[4/3] relative overflow-hidden bg-white flex flex-row items-stretch cursor-pointer" : "aspect-[4/3] relative overflow-hidden bg-white flex flex-col md:flex-row items-stretch cursor-pointer"}
-            onClick={handleImageClick}
-            aria-label={`Open images for ${project.company}`}
-            tabIndex={0}
-            role="button"
-          >
-            <div className={isYookrIntern ? "w-full md:w-1/5 flex items-center justify-center p-4 bg-white border-r border-border" : "w-full md:w-1/5 flex items-center justify-center p-3 bg-white border-r border-border"}>
-              {companyLogo ? (
-                <ImageWithFallback src={companyLogo.src} alt={companyLogo.description || `${project.company} logo`} className={logoClass} />
-              ) : (
-                <div className={isYookrIntern ? "h-20 w-20 bg-gray-200 flex items-center justify-center rounded-md text-sm text-muted-foreground" : isLargeLogo ? "h-12 w-12 bg-gray-200 flex items-center justify-center rounded-md text-sm text-muted-foreground" : "h-8 w-8 bg-gray-200 flex items-center justify-center rounded-md text-sm text-muted-foreground"}>No Logo</div>
-              )}
-            </div>
-
-            <div className={isYookrIntern ? "w-full md:w-4/5 flex items-start justify-center p-2 bg-gray-50" : "w-full md:w-4/5 flex items-center justify-center p-2 bg-gray-50"}>
-
-              <ImageWithFallback src={showcaseImage!.src} alt={showcaseImage!.description || `${project.company} image`} className={isBdo || isFontys ? smallImageClass : defaultImageClass} />
-            </div>
-
-            <div className="absolute bottom-0 left-0 right-0 h-24 md:h-32 bg-gradient-to-t from-black/28 to-transparent pointer-events-none" />
-
-            <div className="absolute bottom-4 left-4 right-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2"></div>
-                {project.type === 'internship' ? (
-                  <Badge variant="default" className="bg-pink-500 text-white border-pink-400">💼 Internship</Badge>
-                ) : project.type === 'job' ? (
-                  <Badge variant="default" className="bg-green-600 text-black border-green-500">💼 Job</Badge>
-                ) : (
-                  <Badge variant="secondary" className="bg-purple-500 text-white border-purple-400">🎓 Project</Badge>
-                )}
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div className="w-full flex flex-col items-center justify-center p-4 bg-white" onClick={handleImageClick} aria-label={project.videoId ? `Open video for ${project.company}` : 'Open images'} tabIndex={0} role={project.videoId ? 'button' : undefined}>
+        <div
+          className={logoContainerClass}
+          onClick={handleImageClick}
+          aria-label={`Open images for ${project.company}`}
+          tabIndex={0}
+          role="button"
+        >
+          <div className={logoInnerBox}>
             {companyLogo ? (
-              <ImageWithFallback src={companyLogo.src} alt={companyLogo.description || `${project.company} logo`} className={logoClassNonShowcase} />
+              <ImageWithFallback
+                src={companyLogo.src}
+                alt={companyLogo.description || `${project.company} logo`}
+                className={logoImgClass}
+              />
             ) : (
-              <div className="h-12 w-12 bg-gray-200 flex items-center justify-center rounded-md text-sm text-muted-foreground">No Logo</div>
+              <div className="w-full h-full bg-gray-200 flex items-center justify-center rounded-md text-sm text-muted-foreground">No Logo</div>
             )}
-
-            {/* Show type badge for projects without showcase images */}
-            <div className="mt-3">
-              {project.type === 'internship' ? (
-                <Badge variant="default" className="bg-pink-500 text-white border-pink-400">💼 Internship</Badge>
-              ) : project.type === 'job' ? (
-                <Badge variant="default" className="bg-green-600 text-black border-green-500">💼 Job</Badge>
-              ) : (
-                <Badge variant="secondary" className="bg-purple-500 text-white border-purple-400">🎓 Project</Badge>
-              )}
-            </div>
           </div>
-        )}
+
+          <div className="absolute bottom-0 left-0 right-0 h-24 md:h-32 bg-gradient-to-t from-black/28 to-transparent pointer-events-none" />
+
+        </div>
+
+        {/* Badge row: moved below the image (above the role) and slightly larger */}
+        <div className="px-4 pt-4">
+          <div className="flex items-center justify-start">
+            {project.type === 'internship' ? (
+              <Badge variant="default" className="bg-pink-500 text-white border-pink-400 px-3 py-1.5 text-sm md:text-base rounded-full">💼 Internship</Badge>
+            ) : project.type === 'job' ? (
+              <Badge variant="default" className="!bg-blue-500 !text-white !border-blue-600 px-3 py-1.5 text-sm md:text-base rounded-full">💼 Job</Badge>
+            ) : (
+              <Badge variant="secondary" className="bg-purple-500 text-white border-purple-400 px-3 py-1.5 text-sm md:text-base rounded-full">🎓 Project</Badge>
+            )}
+          </div>
+        </div>
 
         <CardHeader className="pb-4 border-b border-gray-200">
           <div className="space-y-2">
@@ -171,7 +136,7 @@ export default function ProjectCard({ project, onOpenVideo, onOpenImages }: Prop
                 )}
 
                 {allProjectImages.length > 0 && (
-                  <Button variant="outline" className="border-purple-400 text-purple-700 hover:bg-purple-50 px-6 py-2 rounded-full shadow flex items-center gap-2" onClick={() => onOpenImages([...showcaseImagesArr, ...nonShowcaseImages])} aria-label={`View images for ${project.company}`}>
+                  <Button variant="outline" className="border-purple-400 text-purple-700 hover:bg-purple-50 px-6 py-2 rounded-full shadow flex items-center gap-2" onClick={() => onOpenImages(allProjectImages)} aria-label={`View images for ${project.company}`}>
                     <span className="inline-flex items-center justify-center">
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-5 h-5 text-purple-600">
                         <rect x="3" y="5" width="18" height="14" rx="2" strokeWidth="2" />

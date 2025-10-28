@@ -30,12 +30,13 @@ export function SkillLegend({ selectedCategory, onCategorySelect }: SkillLegendP
           {Object.entries(skillCategories).map(([key, category]) => {
             const isSelected = selectedCategory === category.name;
             const isClickable = !!onCategorySelect;
-            
+
             return (
-              <div key={key} className="flex items-center gap-2">
-                <Badge 
-                  variant="outline" 
-                  className={`text-xs px-2 py-1 border transition-all duration-200 ${category.color} ${category.bgColor} ${category.borderColor} ${
+              // min-w-0 allows the flex child to shrink so text can wrap instead of overflowing
+              <div key={key} className="flex items-center gap-2 min-w-0">
+                <Badge
+                  variant="outline"
+                  className={`text-xs px-2 py-1 border transition-all duration-200 max-w-full whitespace-normal break-words text-center ${category.color} ${category.bgColor} ${category.borderColor} ${
                     isClickable ? 'cursor-pointer hover:scale-105 hover:shadow-md' : ''
                   } ${
                     isSelected ? 'ring-2 ring-purple-500 ring-offset-2 bg-purple-100 shadow-lg' : ''

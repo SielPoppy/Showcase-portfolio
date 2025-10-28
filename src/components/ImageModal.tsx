@@ -15,7 +15,22 @@ export default function ImageModal({ images, index, onClose, onPrev, onNext }: {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 bg-black/60" onClick={onClose} />
-      <div className="relative w-full max-w-2xl md:max-w-3xl mx-4 ring-2 ring-purple-300 bg-purple-50 shadow-2xl rounded-xl">
+      {/* decorative halo/shadow behind the modal to focus attention */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden>
+        <div className="w-full max-w-2xl md:max-w-3xl mx-4 rounded-xl" style={{ boxShadow: '0 40px 90px rgba(0,0,0,0.55)', filter: 'blur(28px)', opacity: 0.9 }} />
+      </div>
+
+      {/* soft, page-wide shadow cast by the modal */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        aria-hidden
+        style={{
+          background: 'radial-gradient(ellipse at center, rgba(0,0,0,0.36) 60%, rgba(0,0,0,0.18) 80%, rgba(0,0,0,0) 90%)',
+          filter: 'blur(24px)',
+        }}
+      />
+
+      <div className="relative z-30 w-full max-w-2xl md:max-w-3xl mx-4 ring-2 ring-purple-300 bg-purple-50 shadow-2xl rounded-xl">
         <div className="bg-white/90 rounded-xl overflow-hidden">
           <div className="flex justify-between items-center p-4 border-b">
             <h3 className="text-lg font-semibold">Project Images</h3>
@@ -39,7 +54,11 @@ export default function ImageModal({ images, index, onClose, onPrev, onNext }: {
           </div>
 
           <div className="p-4 border-t-2 border-purple-300 bg-white w-full">
-            {typeof current.description === 'string' ? current.description : null}
+            {typeof current.description === 'string' ? (
+              <p className="text-lg text-gray-700">{current.description}</p>
+            ) : (
+              current.description
+            )}
           </div>
         </div>
       </div>

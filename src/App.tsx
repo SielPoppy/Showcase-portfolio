@@ -1,4 +1,3 @@
-// src/App.tsx
 import React from 'react';
 import { Button } from './components/ui/button';
 import { Mail, Download } from 'lucide-react';
@@ -15,6 +14,15 @@ import ErrorBoundary from './components/ErrorBoundary';
 import { AboutSection } from './components/AboutSection';
 
 
+const LinkedInIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
+    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.025-3.037-1.849-3.037-1.85 0-2.131 1.445-2.131 2.938v5.668h-3.554V9h3.414v1.561h.049c.476-.9 1.637-1.849 3.369-1.849 3.601 0 4.268 2.371 4.268 5.456v6.284zM5.337 7.433c-1.144 0-2.069-.927-2.069-2.07 0-1.144.925-2.07 2.069-2.07 1.143 0 2.07.926 2.07 2.07 0 1.143-.927 2.07-2.07 2.07zM7.119 20.452H3.554V9h3.565v11.452z" />
+  </svg>
+);
+
+
+function Seam({
+                  fromColor,
                   toColor,
                   height,
                   blur,
@@ -26,13 +34,10 @@ import { AboutSection } from './components/AboutSection';
     blur: number;
     placement?: 'top' | 'bottom';
 }) {
+    const isBottom = placement === 'bottom';
     const overlap = Math.round(height * 0.85);
-    // If placement is 'bottom', anchor the seam to the bottom of the containing block and pull it down
-    // If placement is 'bottom', anchor the seam to the bottom of the containing block and pull it down
-    // If placement is 'bottom', anchor the seam to the bottom of the containing block and pull it down
-        
+    return (
         <div
-        // make the seam absolutely positioned so it reliably overlaps the junction
             style={{
                 height,
                 width: '100%',
@@ -42,7 +47,7 @@ import { AboutSection } from './components/AboutSection';
                 right: 0,
                 top: isBottom ? 'auto' : -overlap,
                 bottom: isBottom ? -overlap : 'auto',
-                zIndex: 5, 
+                zIndex: 5,
                 background: `linear-gradient(180deg, ${fromColor} 0%, ${toColor} 100%)`,
                 filter: `blur(${blur}px)`,
                 boxShadow: '0 30px 60px rgba(0,0,0,0.06)',
@@ -54,25 +59,7 @@ import { AboutSection } from './components/AboutSection';
 }
 
 
-function InlineSeam({ fromColor, toColor, height, blur }: { fromColor: string; toColor: string; height: number; blur: number }) {
-  const overlap = Math.round(height * 0.85);
-  return (
-    <div
-      aria-hidden
-      style={{
-        height,
-        marginTop: -overlap,
-        width: '100%',
-        pointerEvents: 'none',
-        position: 'relative',
-        zIndex: 0, 
-        background: `linear-gradient(180deg, ${fromColor} 0%, ${toColor} 100%)`,
-        filter: `blur(${blur}px)`,
-        boxShadow: '0 30px 60px rgba(0,0,0,0.06)',
-      }}
-    />
-  );
-}
+
 
 export default function App() {
   const [selectedCategory, setSelectedCategory] = React.useState<string | null>(null);
@@ -80,6 +67,22 @@ export default function App() {
   const [imageModalOpen, setImageModalOpen] = React.useState(false);
   const [modalImages, setModalImages] = React.useState<any[]>([]);
   const [modalImageIndex, setModalImageIndex] = React.useState(0);
+
+  // Whether any modal is currently open (used to dim the page and block scroll)
+  const isModalOpen = (imageModalOpen && modalImages.length > 0) || !!video;
+
+  React.useEffect(() => {
+    if (isModalOpen) {
+      const prev = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = prev || '';
+      };
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isModalOpen]);
 
   const filteredProjects = selectedCategory
     ? projects.filter((project) => Array.isArray(project.skills) && project.skills.some((skill) => getSkillCategory(skill).name === selectedCategory))
@@ -106,7 +109,9 @@ export default function App() {
 
    return (
     <ErrorBoundary>
-      <div className="min-h-screen relative z-30">
+      {/* Main content — dim when a modal is open. Modals are rendered as siblings so
+          the dimming filter doesn't affect them. */}
+      <div className={`min-h-screen relative z-30 ${isModalOpen ? 'filter brightness-50 transition duration-300' : ''}`}>
 
         <FloatingEmojis z={-1} />
 
@@ -143,8 +148,8 @@ export default function App() {
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-lg">📞</span>
-                  <span>{personalInfo.phone}</span>
+            <span className="text-lg">📞</span>
+            <a href={`tel:${personalInfo.phone}`} className="underline">{personalInfo.phone}</a>
                 </div>
               </div>
 
@@ -156,7 +161,7 @@ export default function App() {
                   </Button>
                 </a>
                 <a href="https://www.linkedin.com/in/youri-van-baal-114198332/" target="_blank" rel="noopener noreferrer">
-                  <Button size="lg" className="bg-[#0077B5] text-white">LinkedIn</Button>
+                  <Button size="lg" className="bg-[#0077B5] text-white"><LinkedInIcon className="w-4 h-4 mr-2" />LinkedIn</Button>
                 </a>
               </div>
             </div>
@@ -192,13 +197,17 @@ export default function App() {
               {filteredProjects.length === 0 && selectedCategory ? (
                 <div className="text-center py-8">No projects found with the selected skill category.</div>
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-6 justify-center">
-                  {filteredProjects.map((project, idx) => (
-                    
-                    <div key={idx} className="w-full max-w-md mx-auto">
-                      <ProjectCard project={project} onOpenVideo={handleOpenVideo} onOpenImages={handleOpenImages} />
-                    </div>
-                  ))}
+                <div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-6 justify-center">
+                    {filteredProjects.map((project, idx) => (
+                      <div key={idx} className="w-full max-w-md mx-auto">
+                        <ProjectCard project={project} onOpenVideo={handleOpenVideo} onOpenImages={handleOpenImages} />
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Spacer: push the gradient transition below the project cards */}
+                  <div style={{ height: '20rem' }} />
                 </div>
               )}
             </div>
@@ -211,26 +220,55 @@ export default function App() {
         {/* Use the dedicated AboutSection component which includes hobby badges and responsive layout */}
         <AboutSection />
 
-        <Seam fromColor={`${aboutColorTransparent}`} toColor={`${contactTop}`} height={120} blur={36} />
-        <section id="contact" className="relative z-20 py-16 px-6 bg-gradient-to-r from-black via-purple-900 to-pink-900">
-          <div className="max-w-4xl mx-auto text-center space-y-8 text-white">
-            <div>
-              <h2 className="text-4xl font-bold">Ready to Contribute</h2>
-              <p className="text-xl opacity-90 mt-2">I'm actively seeking internship opportunities where I can apply my skills and contribute to meaningful projects.</p>
+  <Seam fromColor={`${aboutColorTransparent}`} toColor={`${contactTop}`} height={120} blur={36} />
+  <section id="contact" className="relative z-20 pt-32 pb-64 px-6 bg-gradient-to-r from-black via-purple-900 to-pink-900">
+          <div className="max-w-5xl mx-auto text-center space-y-16 text-white">
+            <div className="pt-12 pb-12 mb-20">
+              <br />
+              <h2 className="text-5xl font-bold">Ready to Contribute</h2>
+
+              <p className="text-2xl opacity-95 mt-8">I'm actively seeking internship opportunities where I can apply my skills and contribute to meaningful projects.</p>
+
+              <br />
             </div>
-            <div className="flex flex-col items-center sm:flex-row sm:justify-center gap-6">
-              <div className="text-sm opacity-90 text-white text-left">
-                <div><a href={`mailto:${personalInfo.email}`} className="underline">{personalInfo.email}</a></div>
-                {personalInfo.secondaryEmail && <div><a href={`mailto:${personalInfo.secondaryEmail}`} className="underline">{personalInfo.secondaryEmail}</a></div>}
-                <div className="mt-1">📞 <a href={`tel:${personalInfo.phone}`} className="underline">{personalInfo.phone}</a></div>
-                <div className="mt-1"><a href="https://www.linkedin.com/in/youri-van-baal-114198332/" target="_blank" rel="noopener noreferrer" className="underline">LinkedIn</a></div>
-              </div>
-              <div>
-                <a href={`mailto:${personalInfo.email}`} aria-label={`Send email to ${personalInfo.name}`} className="inline-block">
-                  <Button size="lg" className="bg-white text-black hover:bg-gray-100"><Mail className="w-4 h-4 mr-2" />Get in Touch</Button>
-                </a>
+            <div className="flex flex-col items-center sm:flex-row sm:justify-between gap-12 w-full mt-20">
+              <div className="text-base opacity-95 text-white text-left w-full max-w-2xl space-y-6">
+                <div>
+                  <a href={`mailto:${personalInfo.email}`} aria-label={`Email ${personalInfo.email}`} className="inline-block">
+                    <Button size="lg" className="bg-white text-black hover:bg-gray-100 inline-flex items-center px-6 py-3">
+                      <Mail className="w-4 h-4 mr-2" />{personalInfo.email}
+                    </Button>
+                  </a>
+                </div>
+                {personalInfo.secondaryEmail && (
+                  <div>
+                    <a href={`mailto:${personalInfo.secondaryEmail}`} aria-label={`Email ${personalInfo.secondaryEmail}`} className="inline-block">
+                      <Button size="lg" className="bg-white text-black hover:bg-gray-100 inline-flex items-center px-6 py-3">
+                        <Mail className="w-4 h-4 mr-2" />{personalInfo.secondaryEmail}
+                      </Button>
+                    </a>
+                  </div>
+                )}
+
+                <div className="flex justify-center">
+                  <a href={`tel:${personalInfo.phone}`} aria-label={`Call ${personalInfo.phone}`}>
+                    <Button size="lg" className="bg-white text-black hover:bg-gray-100 inline-flex items-center px-6 py-3">
+                      <span className="text-lg mr-2">📞</span>
+                      {personalInfo.phone}
+                    </Button>
+                  </a>
+                </div>
+
+                <div className="flex justify-center">
+                  <a href="https://www.linkedin.com/in/youri-van-baal-114198332/" target="_blank" rel="noopener noreferrer" aria-label="Open LinkedIn">
+                    <Button size="lg" className="bg-[#0077B5] text-white inline-flex items-center px-6 py-3">
+                      <LinkedInIcon className="w-4 h-4 mr-2" />LinkedIn
+                    </Button>
+                  </a>
+                </div>
               </div>
             </div>
+            <br />
           </div>
         </section>
 
@@ -239,13 +277,24 @@ export default function App() {
             <p className="text-gray-700">© 2025 {personalInfo.name}. Built with React, TypeScript, and Vite.</p>
           </div>
         </footer>
-
-        {imageModalOpen && modalImages.length > 0 && (
-          <ImageModal images={modalImages} index={modalImageIndex} onClose={() => setImageModalOpen(false)} onPrev={() => setModalImageIndex((i) => Math.max(0, i - 1))} onNext={() => setModalImageIndex((i) => Math.min(modalImages.length - 1, i + 1))} />
-        )}
-
-        {video && <VideoModal video={video} onClose={() => setVideo(null)} />}
       </div>
+
+      {isModalOpen && (
+        <div className="fixed inset-0 z-40 bg-black/50 transition-opacity duration-200 pointer-events-none" aria-hidden />
+      )}
+
+      {/* Render modals outside the dimmed content so they remain bright and clickable */}
+      {imageModalOpen && modalImages.length > 0 && (
+        <ImageModal
+          images={modalImages}
+          index={modalImageIndex}
+          onClose={() => setImageModalOpen(false)}
+          onPrev={() => setModalImageIndex((i) => Math.max(0, i - 1))}
+          onNext={() => setModalImageIndex((i) => Math.min(modalImages.length - 1, i + 1))}
+        />
+      )}
+
+      {video && <VideoModal video={video} onClose={() => setVideo(null)} />}
     </ErrorBoundary>
   );
 }
