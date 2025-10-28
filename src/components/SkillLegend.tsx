@@ -1,6 +1,6 @@
 import { Badge } from "./ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { Palette, Filter } from "lucide-react";
+import { Palette } from "lucide-react";
 import { skillCategories } from "./utils/skillCategories";
 
 interface SkillLegendProps {
@@ -11,23 +11,18 @@ interface SkillLegendProps {
 export function SkillLegend({ selectedCategory, onCategorySelect }: SkillLegendProps) {
   const handleCategoryClick = (categoryName: string) => {
     if (onCategorySelect) {
-      // Toggle selection: if already selected, deselect it
+      
       onCategorySelect(selectedCategory === categoryName ? null : categoryName);
     }
   };
 
   return (
-    <Card className="mt-8">
+    
+    <Card className="relative z-20 mt-8">
       <CardHeader className="pb-3">
-        <CardTitle className="flex items-center gap-2 text-base">
+        <CardTitle className="flex items-center gap-2 text-base justify-center">
           <Palette className="w-4 h-4" />
           Skill Categories
-          {onCategorySelect && (
-            <span className="text-xs font-normal text-gray-600 ml-2">
-              <Filter className="w-3 h-3 inline mr-1" />
-              Click to filter projects
-            </span>
-          )}
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -59,7 +54,7 @@ export function SkillLegend({ selectedCategory, onCategorySelect }: SkillLegendP
               <strong>Click</strong> any category to filter projects • <strong>Hover</strong> over skill badges to see classifications
             </>
           ) : (
-            'Hover over any skill badge to see its category classification'
+            'Hover over any skill badge on the project cards below to see its category classification'
           )}
         </p>
       </CardContent>

@@ -1,4 +1,4 @@
-// Skill categorization system with color coding
+
 export interface SkillCategory {
   name: string;
   color: string;
@@ -52,7 +52,7 @@ export const skillCategories = {
   "IoT & Embedded": {
     name: "IoT & Embedded",
     color: "text-amber-900",
-    // Lighter amber background with darker text for improved contrast on light page backgrounds
+    
     bgColor: "bg-amber-300 hover:bg-amber-400 shadow-sm",
     borderColor: "border-amber-400"
   },
@@ -88,7 +88,7 @@ export const skillMapping: Record<string, keyof typeof skillCategories> = {
   "CSS3": "Frontend Technologies",
   "Tailwind CSS": "Frontend Technologies",
   
-  // Backend Technologies
+  
   "Node.js": "Backend Technologies",
   "Express.js": "Backend Technologies",
   ".NET": "Backend Technologies",
@@ -96,7 +96,7 @@ export const skillMapping: Record<string, keyof typeof skillCategories> = {
   "Actix-web": "Backend Technologies",
   "REST APIs": "Backend Technologies",
   
-  // Databases & Storage
+  
   "MongoDB": "Databases & Storage",
   "SQL": "Databases & Storage",
   "MySQL": "Databases & Storage",
@@ -105,7 +105,7 @@ export const skillMapping: Record<string, keyof typeof skillCategories> = {
   "S3": "Databases & Storage",
   "Firebase": "Databases & Storage",
   
-  // Cloud & DevOps
+  
   "AWS": "Cloud & DevOps",
   "Azure": "Cloud & DevOps",
   "Lambda": "Cloud & DevOps",
@@ -118,14 +118,14 @@ export const skillMapping: Record<string, keyof typeof skillCategories> = {
   "Kubernetes": "Cloud & DevOps",
   "Webhooks": "Cloud & DevOps",
   
-  // Design & UX Tools
+  
   "Figma": "Design & UX Tools",
   "UI/UX Design": "Design & UX Tools",
   "Wireframing": "Design & UX Tools",
   "Prototyping": "Design & UX Tools",
   "User Research": "Design & UX Tools",
   
-  // Development Tools
+  
   "Git": "Development Tools",
   "GitHub": "Development Tools",
   "Jest": "Development Tools",
@@ -135,7 +135,7 @@ export const skillMapping: Record<string, keyof typeof skillCategories> = {
   "OpenAI APIs": "Development Tools",
   "Google APIs": "Development Tools",
   
-  // Soft Skills
+  
   "Agile": "Soft Skills",
   "Scrum": "Soft Skills",
   "Project Management": "Soft Skills",
@@ -143,7 +143,7 @@ export const skillMapping: Record<string, keyof typeof skillCategories> = {
   "Team Coordination": "Soft Skills",
   "Testing": "Soft Skills",
   
-  // Personal Skills
+  
   "Problem Solving": "Personal Skills",
   "Goal Setting": "Personal Skills", 
   "Discipline": "Personal Skills",
@@ -158,19 +158,19 @@ export const skillMapping: Record<string, keyof typeof skillCategories> = {
   "Automation": "Personal Skills",
   "Time Management": "Personal Skills",
   "Technical Writing": "Personal Skills",
-  // IoT & Embedded specific items mapped to the category
+  
   "IoT": "IoT & Embedded",
   "LoRaWAN": "IoT & Embedded"
  };
 
-// Utility function to get skill category
+
 export function getSkillCategory(skill: string): SkillCategory {
   const categoryKey = skillMapping[skill];
   if (categoryKey && skillCategories[categoryKey]) {
     return skillCategories[categoryKey];
   }
   
-  // Default category for unmapped skills
+  
   return {
     name: "Other",
     color: "text-slate-700",
@@ -179,7 +179,7 @@ export function getSkillCategory(skill: string): SkillCategory {
   };
 }
 
-// Utility function to get all skills in a category
+
 export function getSkillsByCategory(categoryKey: keyof typeof skillCategories): string[] {
   return Object.entries(skillMapping)
     .filter(([_, category]) => category === categoryKey)

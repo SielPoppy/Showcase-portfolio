@@ -15,27 +15,64 @@ const navItems: NavItem[] = [
 ];
 
 export function SideNavbar() {
-  const [activeSection, setActiveSection] = useState('hero');
+  
+  const [activeSections, setActiveSections] = useState<string[]>(['hero']);
 
-  // Track which section is currently in view
+  
   useEffect(() => {
-    const handleScroll = () => {
-      const sections = navItems.map(item => document.getElementById(item.id));
-      const scrollPosition = window.scrollY + 100; // Offset for better detection
+    const sections = navItems
+      .map(item => document.getElementById(item.id))
+      .filter(Boolean) as HTMLElement[];
 
-      for (let i = sections.length - 1; i >= 0; i--) {
-        const section = sections[i];
-        if (section && section.offsetTop <= scrollPosition) {
-          setActiveSection(navItems[i].id);
-          break;
-        }
+    if (!sections.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        
+        setActiveSections((prev) => {
+          const set = new Set(prev);
+
+          entries.forEach((e) => {
+            const id = e.target.id;
+            if (e.isIntersecting) set.add(id);
+            else set.delete(id);
+          });
+
+          
+          if (set.size === 0) {
+            let closest: HTMLElement | null = null;
+            let minDist = Infinity;
+            sections.forEach((s) => {
+              const rect = s.getBoundingClientRect();
+              const dist = Math.abs(rect.top);
+              if (dist < minDist) {
+                minDist = dist;
+                closest = s;
+              }
+            });
+            if (closest) return [closest.id];
+          }
+
+          return Array.from(set);
+        });
+      },
+      {
+        
+        threshold: [0, 0.01, 0.1, 0.25, 0.5],
       }
-    };
+    );
 
-    window.addEventListener('scroll', handleScroll);
-    handleScroll(); // Initial check
+    sections.forEach((s) => observer.observe(s));
 
-    return () => window.removeEventListener('scroll', handleScroll);
+    
+    const initiallyVisible = sections.filter((s) => {
+      const rect = s.getBoundingClientRect();
+      return rect.top < window.innerHeight && rect.bottom > 0;
+    }).map(s => s.id);
+
+    if (initiallyVisible.length > 0) setActiveSections(initiallyVisible);
+
+    return () => observer.disconnect();
   }, []);
 
   const scrollToSection = (sectionId: string) => {
@@ -53,7 +90,7 @@ export function SideNavbar() {
       <div className="bg-white/90 backdrop-blur-sm border border-gray-200 rounded-2xl shadow-xl p-2">
         <div className="flex flex-col gap-1">
           {navItems.map((item) => {
-            const isActive = activeSection === item.id;
+            const isActive = activeSections.includes(item.id);
             
             return (
               <button

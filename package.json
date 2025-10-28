@@ -55,8 +55,6 @@
   "scripts": {
     "dev": "cross-env PORT=3000 vite",
     "build": "cross-env PORT=3000 vite build",
-    "start": "npm run build && node server.cjs",
-    "postinstall": "node ../../../../about-me/scripts/postinstall.cjs",
-    "postbuild": "node ./scripts/fix-dist-case.cjs"
+    "start": "npm run build && node server.cjs"
   }
 }
