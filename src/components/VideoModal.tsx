@@ -1,10 +1,25 @@
 import React from 'react';
+import Portal from './Portal';
 
 type Video = { url: string; title?: string; description?: React.ReactNode } | null;
 
 export default function VideoModal({ video, onClose }: { video: Video; onClose: () => void }) {
   if (!video) return null;
 
+  // Prevent the opening click from immediately closing the modal
+  const ignoreClicksUntil = React.useRef<number>(0);
+  React.useEffect(() => {
+    ignoreClicksUntil.current = performance.now() + 250;
+  }, []);
+
+  // Close on Escape
+  React.useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [onClose]);
   
   let safeUrl: string | null = null;
   try {
@@ -48,38 +63,42 @@ export default function VideoModal({ video, onClose }: { video: Video; onClose: 
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="absolute inset-0 bg-black/60" onClick={onClose} />
+    <Portal containerId="app-modal-root">
+      <div className="modal-root" key="video-modal">
+      <div
+        className="modal-backdrop"
+        onMouseDown={(e) => {
+          if (performance.now() < ignoreClicksUntil.current) return;
+          onClose();
+        }}
+      />
       {/* decorative halo/shadow behind the modal to focus attention */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden>
-        <div className="w-full max-w-2xl md:max-w-3xl mx-4 rounded-xl" style={{ boxShadow: '0 40px 90px rgba(0,0,0,0.55)', filter: 'blur(28px)', opacity: 0.9 }} />
+      <div className="modal-halo" aria-hidden>
+        <div className="modal-halo-inner" />
       </div>
 
       {/* soft, page-wide shadow cast by the modal so it appears to sit above the page */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        aria-hidden
-        style={{
-          // place between the dimmer and the modal content by ordering; use a soft radial gradient and blur
-          background: 'radial-gradient(ellipse at center, rgba(0,0,0,0.36) 60%, rgba(0,0,0,0.18) 80%, rgba(0,0,0,0) 90%)',
-          filter: 'blur(24px)',
-        }}
-      />
+      <div className="modal-shadow" aria-hidden />
 
-      <div className="relative z-30 w-full max-w-2xl md:max-w-3xl mx-4 ring-2 ring-purple-300 bg-purple-50 shadow-2xl rounded-xl">
-        <div className="bg-white/90 rounded-xl overflow-hidden">
+      <div
+        className="image-modal-frame"
+        onMouseDown={(e) => {
+          e.stopPropagation();
+        }}
+      >
+        <div className="bg-white rounded-xl overflow-hidden">
           <div className="flex justify-between items-center p-4 border-b">
             <h3 className="text-lg font-semibold">{video.title || 'Project Video'}</h3>
             <button onClick={onClose} className="text-gray-600 hover:text-gray-900" aria-label="Close video modal">✕</button>
           </div>
 
-          <div className="bg-black px-4 md:px-8">
-            <div style={{ position: 'relative', width: '100%', paddingBottom: '56.25%' }}>
+          <div className="video-stage">
+            <div className="aspect-video-embed">
               {safeUrl ? (
                 <iframe
                   src={safeUrl}
                   title={video.title || 'Project video'}
-                  style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
+                  className="iframe-embed"
                   frameBorder="0"
                   // Allow common features used by embedded players. Leaving this
                   // improves compatibility and avoids some player configuration errors.
@@ -117,5 +136,6 @@ export default function VideoModal({ video, onClose }: { video: Video; onClose: 
         </div>
       </div>
     </div>
+    </Portal>
   );
 }

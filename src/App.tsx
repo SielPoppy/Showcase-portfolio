@@ -1,13 +1,13 @@
 import React from 'react';
+import Portal from './components/Portal';
 import { Button } from './components/ui/button';
+import FeaturedProjects from './components/FeaturedProjects';
 import { Mail, Download } from 'lucide-react';
 import ImageModal from './components/ImageModal';
 import VideoModal from './components/VideoModal';
-import ProjectCard from './components/ProjectCard';
-import { SkillLegend } from './components/SkillLegend';
 import FloatingEmojis from './components/FloatingEmojis';
 import { SideNavbar } from './components/SideNavbar';
-import { getSkillCategory } from './components/utils/skillCategories';
+import { getSkillCategory, skillCategories } from './components/utils/skillCategories';
 import { projects, personalInfo } from './data/projects';
 import ImageWithFallback from './components/figma/ImageWithFallback';
 import ErrorBoundary from './components/ErrorBoundary';
@@ -21,48 +21,14 @@ const LinkedInIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
 );
 
 
-function Seam({
-                  fromColor,
-                  toColor,
-                  height,
-                  blur,
-                  placement = 'top',
-              }: {
-    fromColor: string;
-    toColor: string;
-    height: number;
-    blur: number;
-    placement?: 'top' | 'bottom';
-}) {
-    const isBottom = placement === 'bottom';
-    const overlap = Math.round(height * 0.85);
-    return (
-        <div
-            style={{
-                height,
-                width: '100%',
-                pointerEvents: 'none',
-                position: 'absolute',
-                left: 0,
-                right: 0,
-                top: isBottom ? 'auto' : -overlap,
-                bottom: isBottom ? -overlap : 'auto',
-                zIndex: 5,
-                background: `linear-gradient(180deg, ${fromColor} 0%, ${toColor} 100%)`,
-                filter: `blur(${blur}px)`,
-                boxShadow: '0 30px 60px rgba(0,0,0,0.06)',
-                opacity: 1,
-                willChange: 'transform',
-            }}
-        />
-    );
-}
+// Decorative seam removed; About now flows directly into Contact
 
 
 
 
 export default function App() {
   const [selectedCategory, setSelectedCategory] = React.useState<string | null>(null);
+  const [selectedSkill, setSelectedSkill] = React.useState<string | null>(null);
   const [video, setVideo] = React.useState<{ url: string; title?: string; description?: React.ReactNode } | null>(null);
   const [imageModalOpen, setImageModalOpen] = React.useState(false);
   const [modalImages, setModalImages] = React.useState<any[]>([]);
@@ -85,8 +51,27 @@ export default function App() {
   }, [isModalOpen]);
 
   const filteredProjects = selectedCategory
-    ? projects.filter((project) => Array.isArray(project.skills) && project.skills.some((skill) => getSkillCategory(skill).name === selectedCategory))
+    ? projects.filter((project) => Array.isArray(project.skills) && project.skills.some((skill: any) => getSkillCategory((skill && skill.name) ? skill.name : String(skill)).name === selectedCategory))
     : projects;
+
+  // If a skill is selected, override to filter by skill name
+  const fullyFilteredProjects = selectedSkill
+    ? projects.filter((project) => Array.isArray(project.skills) && project.skills.some((skill: any) => {
+        const name = (skill && skill.name) ? skill.name : String(skill);
+        return name === selectedSkill;
+      }))
+    : filteredProjects;
+
+  const activeCategoryObj = selectedSkill
+    ? getSkillCategory(selectedSkill)
+    : selectedCategory
+    ? (skillCategories as any)[selectedCategory as keyof typeof skillCategories]
+    : null;
+
+  const badgeBg = activeCategoryObj ? activeCategoryObj.bgColor : 'bg-purple-100';
+  const badgeColor = activeCategoryObj ? activeCategoryObj.color : 'text-purple-800';
+  const badgeBorder = activeCategoryObj ? activeCategoryObj.borderColor : 'border-purple-200';
+  const badgeRing = activeCategoryObj ? `${activeCategoryObj.borderColor.replace('border-', 'ring-')} ring-offset-2 ring-2` : 'ring-purple-500 ring-offset-2 ring-2';
 
   const handleOpenVideo = (v: { url: string; title?: string; description?: React.ReactNode }) => setVideo(v);
   const handleOpenImages = (images: any[]) => {
@@ -95,173 +80,132 @@ export default function App() {
     setImageModalOpen(true);
   };
 
-  
-  const heroColor = 'rgba(243,244,246,1)'; 
-  const heroColorTransparent = 'rgba(243,244,246,0.0)';
 
-  
-    const projectColor = 'rgba(255,190,230,1)';
-    
-    const projectColorTransparent = 'rgba(255,190,230,0.08)'; // increased alpha
-
-   const aboutColorTransparent = 'rgba(247,250,252,0.0)';
-   const contactTop = 'rgba(0,0,0,0.14)';
+  // Colors and decorative seams moved to CSS classes
 
    return (
     <ErrorBoundary>
       {/* Main content — dim when a modal is open. Modals are rendered as siblings so
           the dimming filter doesn't affect them. */}
-      <div className={`min-h-screen relative z-30 ${isModalOpen ? 'filter brightness-50 transition duration-300' : ''}`}>
-
-        <FloatingEmojis z={-1} />
+  <div className={`app-shell`}>
+  {/* Layer host for floating emojis so they sit above section backgrounds but below content */}
+  <div id="emoji-root" aria-hidden />
+  {/* Render emojis inside the app shell (between backgrounds and content). We avoid filter issues by not using page-dim. */}
+  <FloatingEmojis z={10} containerId="emoji-root" />
 
         <SideNavbar />
 
         {/* Hero */}
-        <section id="hero" className="relative">
-          <div className="absolute inset-0" aria-hidden="true" style={{ background: `linear-gradient(180deg, ${heroColor} 0%, ${heroColorTransparent} 55%)`, zIndex: -100 }} />
-          <div className="relative z-20 pt-20 pb-16 px-6">
-            <div className="max-w-4xl mx-auto text-center space-y-8">
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-100 text-green-800 rounded-full text-sm font-medium border border-green-200">
-                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse ring-2 ring-white/75 shadow-sm" />
+        <section id="hero" className="hero-section">
+          <div className="hero-overlay" aria-hidden="true" />
+          <div className="hero-container">
+            <div className="hero-inner">
+              <div className="status-pill">
+                <div className="status-dot" />
                 {personalInfo.status}
               </div>
 
               <div className="flex justify-center mt-2">
-                <div className="rounded-full bg-gray-200 overflow-hidden" style={{ width: 360, height: 360 }}>
-                  <ImageWithFallback src="/images/personal/Youri.png" alt={`${personalInfo.name} photo`} className="w-full h-full object-cover" />
+                <div className="avatar-hero">
+                  <ImageWithFallback src="/images/personal/Youri.webp" alt={`${personalInfo.name} photo`} className="w-full h-full object-cover" />
                 </div>
               </div>
 
               <div className="space-y-6">
-                <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-black via-purple-900 to-pink-900 bg-clip-text text-transparent">{personalInfo.name}</h1>
-                <p className="text-xl md:text-2xl text-black font-medium">{personalInfo.title}</p>
-                <p className="text-lg text-gray-700 max-w-2xl mx-auto leading-relaxed">{personalInfo.subtitle}</p>
+                <h1 className="hero-name">{personalInfo.name}</h1>
+                <p className="hero-title">{personalInfo.title}</p>
               </div>
 
-              <div className="flex flex-wrap justify-center gap-6 text-gray-700">
-                <div className="flex items-center gap-2">
-                  <Mail className="w-4 h-4 text-purple-600" />
-                  <div className="flex flex-col leading-tight">
-                    <a href={`mailto:${personalInfo.email}`} className="underline">{personalInfo.email}</a>
-                    <a href={`mailto:${personalInfo.secondaryEmail}`} className="text-sm opacity-90 underline">{personalInfo.secondaryEmail}</a>
-                  </div>
+              <div className="cta-row text-gray-700">
+                <div className="cta-group">
+                  <a href={`mailto:${personalInfo.email}`} aria-label={`Email ${personalInfo.email}`} className="inline-block">
+                    <Button size="lg" className="btn-email">
+                      <Mail className="w-4 h-4 mr-2" />{personalInfo.email}
+                    </Button>
+                  </a>
+
+                  {personalInfo.secondaryEmail && (
+                    <a href={`mailto:${personalInfo.secondaryEmail}`} aria-label={`Email ${personalInfo.secondaryEmail}`} className="inline-block">
+                      <Button size="lg" className="btn-email">
+                        <Mail className="w-4 h-4 mr-2" />{personalInfo.secondaryEmail}
+                      </Button>
+                    </a>
+                  )}
                 </div>
-                <div className="flex items-center gap-2">
-            <span className="text-lg">📞</span>
-            <a href={`tel:${personalInfo.phone}`} className="underline">{personalInfo.phone}</a>
+
+                <div className="phone-group">
+                  <a href={`tel:${personalInfo.phone}`} aria-label={`Call ${personalInfo.phone}`} className="inline-block">
+                    <Button size="lg" className="btn-phone">
+                      <span className="text-lg mr-2">📞</span>
+                      {personalInfo.phone}
+                    </Button>
+                  </a>
                 </div>
               </div>
 
-              <div className="flex flex-wrap justify-center gap-4">
+              <div className="cta-row mb-0">
                 <a href="/document/Resume.pdf" download="Resume.pdf" className="inline-block">
-                  <Button size="lg" className="bg-gradient-to-r from-pink-600 to-purple-600 text-white">
+                  <Button size="lg" className="btn-resume">
                     <Download className="w-4 h-4 mr-2" />
                     Download Resume
                   </Button>
                 </a>
                 <a href="https://www.linkedin.com/in/youri-van-baal-114198332/" target="_blank" rel="noopener noreferrer">
-                  <Button size="lg" className="bg-[#0077B5] text-white"><LinkedInIcon className="w-4 h-4 mr-2" />LinkedIn</Button>
+                  <Button size="lg" className="btn-linkedin"><LinkedInIcon className="w-4 h-4 mr-2" />LinkedIn</Button>
                 </a>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Projects */}
-        <section id="projects" className="relative">
-          {/* Background under Projects: fade project pastel into white at the bottom so Projects->About is smooth */}
-          <div className="absolute inset-0" aria-hidden style={{ background: `linear-gradient(180deg, ${projectColorTransparent} 0%, ${projectColor} 10%, ${projectColor} 80%, rgba(255,255,255,1) 95%)`, zIndex: -10 }} />
-          <div className="relative z-40 pb-32 px-6">
-            <div className="max-w-6xl mx-auto space-y-6">
-              <div style={{ height: '12rem' }} />
-              <div className="text-center space-y-4">
-                <h2 className="text-4xl font-bold">Experience & Projects</h2>
-                <p className="text-lg text-gray-700 max-w-2xl mx-auto">Real-world experience gained through internships and collaborative projects with industry leaders</p>
-              </div>
-              <div className="flex justify-center">
-                <div className="max-w-4xl w-full">
-                  <SkillLegend selectedCategory={selectedCategory} onCategorySelect={setSelectedCategory} />
-                </div>
-              </div>
+  {/* Featured Projects (uses featured IDs in data/projects.ts) */}
+  <section id="projects" className="projects-section">
+    <FeaturedProjects onOpenVideo={handleOpenVideo} onOpenImages={handleOpenImages} />
+  </section>
 
-              {selectedCategory && (
-                <div className="text-center">
-                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-100 text-purple-800 rounded-full text-sm font-medium border border-purple-200">
-                    Showing projects with <strong>{selectedCategory}</strong>
-                    <button onClick={() => setSelectedCategory(null)} className="ml-2 text-purple-600 hover:text-purple-800 font-bold">✕</button>
-                  </div>
-                </div>
-              )}
+  {/* Projects carousel always visible below featured projects */}
 
-              {filteredProjects.length === 0 && selectedCategory ? (
-                <div className="text-center py-8">No projects found with the selected skill category.</div>
-              ) : (
-                <div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-6 justify-center">
-                    {filteredProjects.map((project, idx) => (
-                      <div key={idx} className="w-full max-w-md mx-auto">
-                        <ProjectCard project={project} onOpenVideo={handleOpenVideo} onOpenImages={handleOpenImages} />
-                      </div>
-                    ))}
-                  </div>
 
-                  {/* Spacer: push the gradient transition below the project cards */}
-                  <div style={{ height: '20rem' }} />
-                </div>
-              )}
+  {/* Use the dedicated AboutSection component which includes hobby badges and responsive layout */}
+  <AboutSection />
+
+  <section id="contact" className="contact-section">
+          <div className="contact-inner">
+            <div className="pt-12 pb-6 mb-0">
+              <h2 className="section-title">Invite me over for a coffee ☕</h2>
+
+              <p className="section-subtitle">I'm actively seeking internship opportunities where I can apply my skills and contribute to meaningful projects. Contact me to discuss potential collaborations!</p>
             </div>
-          </div>
-        </section>
-
-        {/* Inline seam between Projects and About: painted as a DOM sibling to avoid stacking-context clipping */}
-
-
-        {/* Use the dedicated AboutSection component which includes hobby badges and responsive layout */}
-        <AboutSection />
-
-  <Seam fromColor={`${aboutColorTransparent}`} toColor={`${contactTop}`} height={120} blur={36} />
-  <section id="contact" className="relative z-20 pt-32 pb-64 px-6 bg-gradient-to-r from-black via-purple-900 to-pink-900">
-          <div className="max-w-5xl mx-auto text-center space-y-16 text-white">
-            <div className="pt-12 pb-12 mb-20">
-              <br />
-              <h2 className="text-5xl font-bold">Ready to Contribute</h2>
-
-              <p className="text-2xl opacity-95 mt-8">I'm actively seeking internship opportunities where I can apply my skills and contribute to meaningful projects.</p>
-
-              <br />
-            </div>
-            <div className="flex flex-col items-center sm:flex-row sm:justify-between gap-12 w-full mt-20">
-              <div className="text-base opacity-95 text-white text-left w-full max-w-2xl space-y-6">
-                <div>
+              <div className="contact-grid">
+              <div className="contact-left">
+                {/* Emails side-by-side and centered */}
+                <div className="cta-row">
                   <a href={`mailto:${personalInfo.email}`} aria-label={`Email ${personalInfo.email}`} className="inline-block">
-                    <Button size="lg" className="bg-white text-black hover:bg-gray-100 inline-flex items-center px-6 py-3">
+                    <Button size="lg" className="btn-email">
                       <Mail className="w-4 h-4 mr-2" />{personalInfo.email}
                     </Button>
                   </a>
-                </div>
-                {personalInfo.secondaryEmail && (
-                  <div>
+                  {personalInfo.secondaryEmail && (
                     <a href={`mailto:${personalInfo.secondaryEmail}`} aria-label={`Email ${personalInfo.secondaryEmail}`} className="inline-block">
-                      <Button size="lg" className="bg-white text-black hover:bg-gray-100 inline-flex items-center px-6 py-3">
+                      <Button size="lg" className="btn-email">
                         <Mail className="w-4 h-4 mr-2" />{personalInfo.secondaryEmail}
                       </Button>
                     </a>
-                  </div>
-                )}
+                  )}
+                </div>
 
-                <div className="flex justify-center">
+                <div className="center-wrap">
                   <a href={`tel:${personalInfo.phone}`} aria-label={`Call ${personalInfo.phone}`}>
-                    <Button size="lg" className="bg-white text-black hover:bg-gray-100 inline-flex items-center px-6 py-3">
+                    <Button size="lg" className="btn-phone">
                       <span className="text-lg mr-2">📞</span>
                       {personalInfo.phone}
                     </Button>
                   </a>
                 </div>
 
-                <div className="flex justify-center">
+                <div className="center-wrap">
                   <a href="https://www.linkedin.com/in/youri-van-baal-114198332/" target="_blank" rel="noopener noreferrer" aria-label="Open LinkedIn">
-                    <Button size="lg" className="bg-[#0077B5] text-white inline-flex items-center px-6 py-3">
+                    <Button size="lg" className="btn-linkedin">
                       <LinkedInIcon className="w-4 h-4 mr-2" />LinkedIn
                     </Button>
                   </a>
@@ -272,15 +216,16 @@ export default function App() {
           </div>
         </section>
 
-        <footer className="relative z-20 py-8 px-6 border-t border-gray-300 bg-white/90 backdrop-blur-sm">
-          <div className="max-w-4xl mx-auto text-center">
-            <p className="text-gray-700">© 2025 {personalInfo.name}. Built with React, TypeScript, and Vite.</p>
+        <footer className="site-footer">
+          <div className="footer-inner">
+            <p className="footer-text">© 2025 {personalInfo.name}. Built with React, TypeScript, and Vite.</p>
           </div>
         </footer>
       </div>
 
       {isModalOpen && (
-        <div className="fixed inset-0 z-40 bg-black/50 transition-opacity duration-200 pointer-events-none" aria-hidden />
+        // Keep the dim overlay in the same portal root as modals to ensure consistent stacking and lifecycle
+        <Portal containerId="app-modal-root"><div className="modal-dim" aria-hidden /></Portal>
       )}
 
       {/* Render modals outside the dimmed content so they remain bright and clickable */}
@@ -295,6 +240,7 @@ export default function App() {
       )}
 
       {video && <VideoModal video={video} onClose={() => setVideo(null)} />}
+  {/* Projects carousel is rendered inline above — no modal here */}
     </ErrorBoundary>
   );
 }

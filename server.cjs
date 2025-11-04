@@ -68,8 +68,9 @@ app.use((req, res, next) => {
 // Serve static files
 app.use(express.static(distPath));
 
-// SPA fallback
-app.get('*', (req, res) => {
+// SPA fallback (Express 5 / path-to-regexp v6+ compatible)
+// Use a RegExp to match all routes instead of '*' which is invalid in v6+
+app.get(/.*/, (req, res) => {
     res.sendFile(path.join(distPath, 'index.html'));
 });
 

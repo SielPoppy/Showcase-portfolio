@@ -1,40 +1,52 @@
 /// <reference types="vite/client" />
+/// <reference types="node" />
 
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
+import type {
+    Plugin,
+    OutputBundle,
+    OutputAsset,
+    OutputChunk,
+    NormalizedOutputOptions,
+} from 'rollup';
 import * as path from 'path';
 
 // Plugin to lowercase emitted file names (run during bundle generation)
-function lowercaseOutputPlugin() {
+function lowercaseOutputPlugin(): Plugin {
     return {
         name: 'lowercase-output',
-        generateBundle(_, bundle) {
-            const renames = [];
+        generateBundle(_: NormalizedOutputOptions, bundle: OutputBundle) {
+            const renames: Array<{ originalName: string; lowerName: string }> = [];
             for (const originalName of Object.keys(bundle)) {
                 const lowerName = originalName.toLowerCase();
                 if (originalName === lowerName) continue;
-                const chunk = bundle[originalName];
+                const item = bundle[originalName] as OutputAsset | OutputChunk | undefined;
+                if (!item) continue;
                 // record rename mapping for later replacement in HTML
                 renames.push({ originalName, lowerName });
-                chunk.fileName = lowerName;
+                // update file name on the chunk/asset
+                item.fileName = lowerName;
                 // set new key and delete old one
-                bundle[lowerName] = chunk;
+                bundle[lowerName] = item;
                 delete bundle[originalName];
             }
 
             if (renames.length > 0) {
                 // update any index.html asset content to reference the lowercased filenames
-                for (const [key, asset] of Object.entries(bundle)) {
-                    if (asset && asset.type === 'asset' && asset.fileName && asset.fileName.toLowerCase().endsWith('index.html')) {
-                        let src = String(asset.source);
+                for (const [, asset] of Object.entries(bundle)) {
+                    if (
+                        asset.type === 'asset' &&
+                        asset.fileName.toLowerCase().endsWith('index.html')
+                    ) {
+                        let src = String((asset as OutputAsset).source ?? '');
                         for (const { originalName, lowerName } of renames) {
                             // replace exact occurrences of the original filename with the lowercased one
-                            // also handle URL-escaped variants and simple cases
                             const escaped = originalName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
                             const re = new RegExp(escaped, 'g');
                             src = src.replace(re, lowerName);
                         }
-                        asset.source = src;
+                        (asset as OutputAsset).source = src;
                     }
                 }
             }
@@ -43,11 +55,15 @@ function lowercaseOutputPlugin() {
 }
 
 // https://vitejs.dev/config/
-export default defineConfig({
+// Allow configuring the base path (useful when deploying under a subfolder like /about-me/)
+// Set BASE env var at build time: BASE=/about-me/
+export default defineConfig(({ mode }) => ({
+    base: process.env.BASE ?? '/',
     plugins: [react(), lowercaseOutputPlugin()],
     resolve: {
         extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
         alias: {
+            '#': path.resolve(__dirname, './src'),
             'vaul@1.1.2': 'vaul',
             'sonner@2.0.3': 'sonner',
             'recharts@2.15.2': 'recharts',
@@ -110,4 +126,4 @@ export default defineConfig({
         port: process.env.PORT ? parseInt(process.env.PORT, 10) : 3000,
         open: true,
     },
-});
+}));

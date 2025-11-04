@@ -79,21 +79,47 @@ export function SideNavbar() {
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
-      // Scroll with a small upward offset so the target sits slightly higher
-      // on the viewport. This helps for sections that have top spacing or
-      // when a fixed header/decoration overlays the top.
-      // Apply a slightly larger offset for the 'about' section specifically.
-      const offset = sectionId === 'about' ? 200 : 64; // px, tweakable
+      // Special-case About: align the About title lower in the viewport
+      // so the text is clearly visible (top of the title ~52% of viewport).
+      if (sectionId === 'about') {
+        const titleEl = element.querySelector<HTMLElement>('.about-title');
+        const anchor = titleEl || element;
+        const r = anchor.getBoundingClientRect();
+  const desiredTop = Math.round(window.innerHeight * 0.20);
+        const rawTarget = window.pageYOffset + r.top - desiredTop;
+        const maxScroll = Math.max(0, (document.documentElement?.scrollHeight || 0) - window.innerHeight);
+        const target = Math.min(Math.max(0, rawTarget), maxScroll);
+        window.scrollTo({ top: target, behavior: 'smooth' });
+        return;
+      }
+
+      // Projects and Experiences: align the section headline near the top-third
+      // for immediate visibility of the text (top ~22% of viewport).
+      if (sectionId === 'projects' || sectionId === 'experience' || sectionId === 'experiences') {
+        // Prefer the visible title if present
+        const titleEl = element.querySelector<HTMLElement>('.featured-title');
+        const anchor = titleEl || element;
+        const rect = anchor.getBoundingClientRect();
+  const desiredTop = Math.round(window.innerHeight * 0.10);
+        const rawTarget = window.pageYOffset + rect.top - desiredTop;
+        const maxScroll = Math.max(0, (document.documentElement?.scrollHeight || 0) - window.innerHeight);
+        const target = Math.min(Math.max(0, rawTarget), maxScroll);
+        window.scrollTo({ top: target, behavior: 'smooth' });
+        return;
+      }
+
+      // Default behavior: scroll with a modest offset so content isn't flush to the top
+      const offset = 64; // px
       const rect = element.getBoundingClientRect();
       const target = window.pageYOffset + rect.top - offset;
-      window.scrollTo({ top: target, behavior: 'smooth' });
+      window.scrollTo({ top: Math.max(0, target), behavior: 'smooth' });
     }
   };
 
   return (
-    <nav className="fixed right-6 top-1/2 -translate-y-1/2 z-50 hidden md:block">
-      <div className="bg-white/90 backdrop-blur-sm border border-gray-200 rounded-2xl shadow-xl p-2">
-        <div className="flex flex-col gap-1">
+    <nav className="sidenav">
+      <div className="sidenav-panel">
+        <div className="sidenav-list">
           {navItems.map((item) => {
             const isActive = activeSections.includes(item.id);
             
@@ -101,29 +127,21 @@ export function SideNavbar() {
               <button
                 key={item.id}
                 onClick={() => scrollToSection(item.id)}
-                className={`group relative flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-300 ${
-                  isActive 
-                    ? 'bg-gradient-to-r from-pink-500 to-purple-600 text-white shadow-lg' 
-                    : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
-                }`}
+                className={`sidenav-button ${isActive ? 'sidenav-button-active' : 'sidenav-button-inactive'}`}
                 title={item.label}
               >
-                <div className={`transition-transform duration-200 ${
-                  isActive ? 'scale-110' : 'group-hover:scale-105'
-                }`}>
+                <div className={`sidenav-icon ${isActive ? 'sidenav-icon-active' : 'sidenav-icon-hover'}`}>
                   {item.icon}
                 </div>
                 
                 {/* Tooltip */}
-                <div className={`absolute right-full mr-3 px-2 py-1 bg-gray-900 text-white text-xs rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none ${
-                  isActive ? 'hidden' : ''
-                }`}>
+                <div className={`sidenav-tooltip ${isActive ? 'hidden' : ''}`}>
                   {item.label}
                 </div>
                 
                 {/* Active indicator */}
                 {isActive && (
-                  <div className="absolute -left-1 top-1/2 -translate-y-1/2 w-1 h-6 bg-white rounded-full shadow-sm" />
+                  <div className="sidenav-indicator" />
                 )}
               </button>
             );
@@ -131,8 +149,7 @@ export function SideNavbar() {
         </div>
         
         {/* Decorative elements */}
-        <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-r from-pink-500 to-purple-600 rounded-full animate-pulse" />
-        <div className="absolute -bottom-1 -left-1 w-2 h-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full animate-pulse delay-500" />
+        <div className="sidenav-dot-top" />
       </div>
     </nav>
   );

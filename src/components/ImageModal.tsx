@@ -1,4 +1,5 @@
 import React from 'react';
+import Portal from './Portal';
 
 export default function ImageModal({ images, index, onClose, onPrev, onNext }: {
   images: any[];
@@ -12,48 +13,72 @@ export default function ImageModal({ images, index, onClose, onPrev, onNext }: {
   const canGoBack = index > 0;
   const canGoForward = index < images.length - 1;
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="absolute inset-0 bg-black/60" onClick={onClose} />
-      {/* decorative halo/shadow behind the modal to focus attention */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden>
-        <div className="w-full max-w-2xl md:max-w-3xl mx-4 rounded-xl" style={{ boxShadow: '0 40px 90px rgba(0,0,0,0.55)', filter: 'blur(28px)', opacity: 0.9 }} />
-      </div>
+  // Prevent the opening click from immediately closing the modal.
+  const ignoreClicksUntil = React.useRef<number>(0);
+  React.useEffect(() => {
+    // allow content to mount before accepting backdrop clicks
+    ignoreClicksUntil.current = performance.now() + 250;
+  }, []);
 
-      {/* soft, page-wide shadow cast by the modal */}
+  // Close on Escape for accessibility
+  React.useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [onClose]);
+
+  return (
+    <Portal containerId="app-modal-root">
+      <div className="modal-root" key="image-modal">
       <div
-        className="absolute inset-0 pointer-events-none"
-        aria-hidden
-        style={{
-          background: 'radial-gradient(ellipse at center, rgba(0,0,0,0.36) 60%, rgba(0,0,0,0.18) 80%, rgba(0,0,0,0) 90%)',
-          filter: 'blur(24px)',
+        className="modal-backdrop"
+        onMouseDown={(e) => {
+          // ignore the initial opening click
+          if (performance.now() < ignoreClicksUntil.current) return;
+          onClose();
         }}
       />
+      {/* decorative halo/shadow behind the modal to focus attention */}
+      <div className="modal-halo" aria-hidden>
+        <div className="modal-halo-inner" />
+      </div>
 
-      <div className="relative z-30 w-full max-w-2xl md:max-w-3xl mx-4 ring-2 ring-purple-300 bg-purple-50 shadow-2xl rounded-xl">
-        <div className="bg-white/90 rounded-xl overflow-hidden">
+
+      {/* soft, page-wide shadow cast by the modal */}
+      <div className="modal-shadow" aria-hidden />
+
+      <div
+        className="image-modal-frame"
+        onMouseDown={(e) => {
+          // prevent backdrop handler from seeing clicks that start inside the modal
+          e.stopPropagation();
+        }}
+      >
+        <div className="bg-white rounded-xl overflow-hidden">
           <div className="flex justify-between items-center p-4 border-b">
             <h3 className="text-lg font-semibold">Project Images</h3>
             <button onClick={onClose} className="text-gray-600 hover:text-gray-900" aria-label="Close image modal">✕</button>
           </div>
 
-          <div className="relative w-full flex flex-col items-center justify-center bg-black py-4 px-4 md:px-8">
+          <div className="image-stage">
             {canGoBack && (
               <button className="absolute left-4 top-1/2 -translate-y-1/2 p-2 z-30" onClick={onPrev} aria-label="Back to previous image">
-                <img src="/icons/arrow-27-16.ico" alt="Previous" className="w-7 h-7" style={{ transform: 'rotate(180deg)' }} />
+                <img src="/icons/arrow-27-16-left.ico" alt="Previous" className="w-16 h-16" />
               </button>
             )}
 
-            <img src={current.src} alt={typeof current.description === 'string' ? current.description : ''} className="block max-w-[90%] md:max-w-[80%] max-h-[60vh] h-auto w-auto rounded shadow-lg" style={{ objectFit: 'contain', objectPosition: 'center' }} />
+            <img src={current.src} alt={typeof current.description === 'string' ? current.description : ''} className="block max-w-[90%] md:max-w-[80%] max-h-[60vh] h-auto w-auto rounded shadow-lg object-contain object-center" />
 
             {canGoForward && (
               <button className="absolute right-4 top-1/2 -translate-y-1/2 p-2 z-30" onClick={onNext} aria-label="Next image">
-                <img src="/icons/arrow-27-16.ico" alt="Next" className="w-7 h-7" />
+                <img src="/icons/arrow-27-16.ico" alt="Next" className="w-16 h-16" />
               </button>
             )}
           </div>
 
-          <div className="p-4 border-t-2 border-purple-300 bg-white w-full">
+          <div className="image-desc">
             {typeof current.description === 'string' ? (
               <p className="text-lg text-gray-700">{current.description}</p>
             ) : (
@@ -63,6 +88,7 @@ export default function ImageModal({ images, index, onClose, onPrev, onNext }: {
         </div>
       </div>
     </div>
+    </Portal>
   );
 }
 
