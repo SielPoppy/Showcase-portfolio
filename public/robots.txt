@@ -1,0 +1,7 @@
+# robots.txt for Showcase Portfolio
+# Allow all well-behaved crawlers to index the site
+User-agent: *
+Allow: /
+
+# If you provide a sitemap, uncomment and update the URL below
+# Sitemap: https://your-domain.example/sitemap.xml

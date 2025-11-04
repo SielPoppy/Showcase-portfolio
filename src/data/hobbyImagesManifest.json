@@ -1,0 +1,48 @@
+{
+  "gaming": [
+    {
+      "url": "/images/personal/hobbies/gaming/hollow-knight.webp",
+      "title": "Hollow Knight"
+    },
+    {
+      "url": "/images/personal/hobbies/gaming/like-a-dragon-gaiden.webp",
+      "title": "Like A Dragon Gaiden"
+    },
+    {
+      "url": "/images/personal/hobbies/gaming/robot-roller-derby-disco-dodgeball.webp",
+      "title": "Robot Roller Derby Disco Dodgeball"
+    },
+    {
+      "url": "/images/personal/hobbies/gaming/spelunky.webp",
+      "title": "Spelunky"
+    }
+  ],
+  "geography": [
+    {
+      "url": "/images/personal/hobbies/geography/budapest,-hungary.webp",
+      "title": "Budapest, Hungary"
+    },
+    {
+      "url": "/images/personal/hobbies/geography/monst-saint-michel,-france.webp",
+      "title": "Monst Saint Michel, France"
+    },
+    {
+      "url": "/images/personal/hobbies/geography/saint-petersburg,-russia.webp",
+      "title": "Saint Petersburg, Russia"
+    }
+  ],
+  "smart-home": [
+    {
+      "url": "/images/personal/hobbies/smart-home/eufy.webp",
+      "title": "Eufy"
+    },
+    {
+      "url": "/images/personal/hobbies/smart-home/google-nest-hub.webp",
+      "title": "Google Nest Hub"
+    },
+    {
+      "url": "/images/personal/hobbies/smart-home/philips-air.webp",
+      "title": "Philips Air"
+    }
+  ]
+}
