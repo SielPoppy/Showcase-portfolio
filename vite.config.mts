@@ -57,8 +57,8 @@ function lowercaseOutputPlugin(): Plugin {
 // https://vitejs.dev/config/
 // Allow configuring the base path (useful when deploying under a subfolder like /about-me/)
 // Set BASE env var at build time: BASE=/about-me/
-export default defineConfig(({ mode }) => ({
-    base: process.env.BASE ?? '/',
+export default defineConfig(() => ({
+    base: '/',
     plugins: [react(), lowercaseOutputPlugin()],
     resolve: {
         extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
