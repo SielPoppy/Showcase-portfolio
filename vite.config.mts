@@ -3,13 +3,6 @@
 
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
-import type {
-    Plugin,
-    OutputBundle,
-    OutputAsset,
-    OutputChunk,
-    NormalizedOutputOptions,
-} from 'rollup';
 import * as path from 'path';
 
 
