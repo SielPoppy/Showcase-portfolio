@@ -12,54 +12,13 @@ import type {
 } from 'rollup';
 import * as path from 'path';
 
-// Plugin to lowercase emitted file names (run during bundle generation)
-function lowercaseOutputPlugin(): Plugin {
-    return {
-        name: 'lowercase-output',
-        generateBundle(_: NormalizedOutputOptions, bundle: OutputBundle) {
-            const renames: Array<{ originalName: string; lowerName: string }> = [];
-            for (const originalName of Object.keys(bundle)) {
-                const lowerName = originalName.toLowerCase();
-                if (originalName === lowerName) continue;
-                const item = bundle[originalName] as OutputAsset | OutputChunk | undefined;
-                if (!item) continue;
-                // record rename mapping for later replacement in HTML
-                renames.push({ originalName, lowerName });
-                // update file name on the chunk/asset
-                item.fileName = lowerName;
-                // set new key and delete old one
-                bundle[lowerName] = item;
-                delete bundle[originalName];
-            }
-
-            if (renames.length > 0) {
-                // update any index.html asset content to reference the lowercased filenames
-                for (const [, asset] of Object.entries(bundle)) {
-                    if (
-                        asset.type === 'asset' &&
-                        asset.fileName.toLowerCase().endsWith('index.html')
-                    ) {
-                        let src = String((asset as OutputAsset).source ?? '');
-                        for (const { originalName, lowerName } of renames) {
-                            // replace exact occurrences of the original filename with the lowercased one
-                            const escaped = originalName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-                            const re = new RegExp(escaped, 'g');
-                            src = src.replace(re, lowerName);
-                        }
-                        (asset as OutputAsset).source = src;
-                    }
-                }
-            }
-        }
-    };
-}
 
 // https://vitejs.dev/config/
 // Allow configuring the base path (useful when deploying under a subfolder like /about-me/)
 // Set BASE env var at build time: BASE=/about-me/
 export default defineConfig(() => ({
     base: '/',
-    plugins: [react(), lowercaseOutputPlugin()],
+    plugins: [react()],
     resolve: {
         extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
         alias: {
