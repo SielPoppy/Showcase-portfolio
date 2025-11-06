@@ -191,7 +191,7 @@ export const personalInfo = {
   name: 'Youri van Baal',
   title: 'Fullstack development Student',
   subtitle: "Passionate about building applications that can help people.",
-  email: 'siel@poppythorn.nl',
+  email: 'mail@yourivanbaal.nl',
   secondaryEmail: 'y.vanbaal@student.fontys.nl',
   phone: '(+31) 6 28817868',
   status: 'Available for Internship Opportunities',

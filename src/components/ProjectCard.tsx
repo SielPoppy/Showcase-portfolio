@@ -9,7 +9,7 @@ import { SkillBadge } from './SkillBadge';
 import SkillUsagePanel from './SkillUsagePanel';
 import CategoryBadge from './CategoryBadge';
 import { getSkillCategory } from './utils/skillCategories';
-import type { Project, Skill } from '../data/projects';
+import type { Project, Skill } from '../../public/data/projects';
 
 type Props = {
   project: Project;
@@ -181,8 +181,7 @@ export default function ProjectCard({ project, onOpenVideo, onOpenImages, compac
     <div className="h-full flex">
 
       <Card
-        className={`relative z-50 group hover:shadow-2xl transition-all duration-300 border-2 border-purple-800 bg-white overflow-hidden cursor-pointer max-w-full flex flex-col h-full ${compact ? 'min-h-[420px]' : 'min-h-[520px]'} ring-2 ring-purple-400/18 group-hover:ring-6 group-hover:ring-purple-500/30`}
-        style={{ padding: '20px', boxShadow: '0 0 12px rgba(124,58,237,0.22), 0 6px 18px rgba(124,58,237,0.10)' }}
+        className={`relative z-50 group hover:shadow-2xl transition-all duration-300 border-2 border-purple-800 bg-white overflow-hidden cursor-pointer max-w-full flex flex-col h-full ${compact ? 'min-h-[420px]' : 'min-h-[520px]'} ring-2 ring-purple-400/18 group-hover:ring-6 group-hover:ring-purple-500/30 project-card-frame`}
       >
         {/* Top area: fixed height so the project type badge sits at the same vertical position
             across all cards. The image is centered inside the top box and will leave
@@ -215,7 +214,7 @@ export default function ProjectCard({ project, onOpenVideo, onOpenImages, compac
 
           {/* Badge flows after logo. We add extra top margin equal to the difference
               between the tallest logo and this card's logo so badges line up. */}
-          <div style={{ marginTop: Math.max(0, (maxLogoHeight || 0) - (logoHeight || 0) + 8) }}>
+          <div className="logo-gap" style={{ ['--logo-gap' as any]: `${Math.max(0, (maxLogoHeight || 0) - (logoHeight || 0) + 8)}px` }}>
             <div className="flex items-center justify-start">
               {project.type === 'internship' ? (
                 <Badge variant="default" className="bg-pink-500 text-white border-pink-400 px-3 py-1.5 text-sm md:text-base rounded-full">💼 Internship</Badge>
@@ -246,7 +245,7 @@ export default function ProjectCard({ project, onOpenVideo, onOpenImages, compac
           </div>
         </CardHeader>
 
-  <CardContent className="px-0 pb-0 flex flex-col flex-grow min-h-0" style={{ paddingBottom: `${contentPaddingBottom}px` }}>
+  <CardContent className="px-0 pb-0 flex flex-col flex-grow min-h-0 card-content-padding" style={{ ['--content-padding-bottom' as any]: `${contentPaddingBottom}px` }}>
           {/* Description section */}
           <div className="pb-4 flex-grow">
             <CardDescription className="text-gray-700 leading-relaxed">{project.description}</CardDescription>
@@ -257,8 +256,8 @@ export default function ProjectCard({ project, onOpenVideo, onOpenImages, compac
   {/* Bottom actions absolutely positioned to the card bottom so spacing is identical across cards */}
   <div
     ref={actionsRef}
-    className="absolute"
-    style={{ bottom: actionsBottom, left: 20, right: 20 }}
+    className={`absolute actions-overlay`}
+    style={{ ['--actions-bottom' as any]: `${actionsBottom}px` }}
   >
           <div className="space-y-4">
             <div className="flex flex-wrap gap-2">

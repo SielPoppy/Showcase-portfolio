@@ -1,7 +1,7 @@
 import React from 'react';
 import ProjectCard from './ProjectCard';
-import { projects, featuredProjectIds } from '../data/projects';
-import type { Project } from '../data/projects';
+import { projects, featuredProjectIds } from '../../public/data/projects';
+import type { Project } from '../../public/data/projects';
 import MoreProjects from './MoreProjects';
 
 type Props = {

@@ -1,4 +1,20 @@
 {
+  "education": [
+    {
+      "url": "/images/personal/hobbies/education/teaching-guide.webp",
+      "title": "Teaching Guide"
+    }
+  ],
+  "fitness": [
+    {
+      "url": "/images/personal/hobbies/fitness/arm-curl-machine.webp",
+      "title": "Arm Curl Machine"
+    },
+    {
+      "url": "/images/personal/hobbies/fitness/chest-extension-machine.webp",
+      "title": "Chest Extension Machine"
+    }
+  ],
   "gaming": [
     {
       "url": "/images/personal/hobbies/gaming/hollow-knight.webp",
@@ -13,8 +29,8 @@
       "title": "Robot Roller Derby Disco Dodgeball"
     },
     {
-      "url": "/images/personal/hobbies/gaming/spelunky.webp",
-      "title": "Spelunky"
+      "url": "/images/personal/hobbies/gaming/spelunky-2.webp",
+      "title": "Spelunky 2"
     }
   ],
   "geography": [

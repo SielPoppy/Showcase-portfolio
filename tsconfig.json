@@ -15,5 +15,5 @@
     "scripts",
     "index.html",
     "server.cjs"
-  ]
+, "public/data/projects.ts"  ]
 }

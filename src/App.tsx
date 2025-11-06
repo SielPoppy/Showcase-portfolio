@@ -8,7 +8,7 @@ import VideoModal from './components/VideoModal';
 import FloatingEmojis from './components/FloatingEmojis';
 import { SideNavbar } from './components/SideNavbar';
 import { getSkillCategory, skillCategories } from './components/utils/skillCategories';
-import { projects, personalInfo } from './data/projects';
+import { projects, personalInfo } from '../public/data/projects';
 import ImageWithFallback from './components/figma/ImageWithFallback';
 import ErrorBoundary from './components/ErrorBoundary';
 import { AboutSection } from './components/AboutSection';

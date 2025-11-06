@@ -483,6 +483,53 @@ body {
   background-image: linear-gradient(180deg, rgba(255,190,230,0.04) 0%, rgba(255,190,230,0.08) 100%);
 }
 
+
+/* ================== Global typography & utility helpers ================== */
+:root {
+  --site-font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  --heading-font-family: var(--site-font-family);
+  --text-color: #111827;
+  --muted-color: #6b7280;
+  --section-title-size: 2.25rem; /* 36px */
+  --section-subtitle-size: 1.5rem; /* 24px */
+  --hero-name-size: 3.75rem; /* 60px */
+}
+
+html, body, #root {
+  font-family: var(--site-font-family);
+  color: var(--text-color);
+}
+
+/* Unified heading classes so components can share visual cadence */
+.heading-hero { font-family: var(--heading-font-family); font-weight: 700; font-size: var(--hero-name-size); line-height: 1; }
+.section-title { font-family: var(--heading-font-family); font-weight: 700; font-size: var(--section-title-size); }
+.section-subtitle { font-size: var(--section-subtitle-size); color: white; margin-top: 0.5rem; }
+.body-text { font-size: 1rem; line-height: 1.6; color: var(--text-color); }
+
+/* Small utility classes to centralize repeated inline styles */
+.measured-width { width: var(--measured-width); }
+.measured-center { margin: 0 auto; }
+.btn-hobby-tall { height: 4.25rem; }
+.polaroid-rotate { transform: rotate(var(--rotate)); }
+.project-card-frame { padding: 20px; box-shadow: 0 0 12px rgba(124,58,237,0.22), 0 6px 18px rgba(124,58,237,0.10); }
+.logo-gap { margin-top: var(--logo-gap); }
+.card-content-padding { padding-bottom: var(--content-padding-bottom); }
+.actions-overlay { position: absolute; left: 20px; right: 20px; bottom: var(--actions-bottom); }
+.more-projects-frame { box-shadow: 0 0 12px rgba(124,58,237,0.22), 0 6px 18px rgba(124,58,237,0.10); display: flex; flex-direction: column; }
+.more-projects-mobile-title { padding: 18px 18px 8px 18px; }
+.ml-16-abs { margin-left: 16px; }
+.pointer-none { pointer-events: none; }
+.hover-action-bottom { bottom: 10px; }
+.visually-hidden { position: absolute !important; left: -9999px !important; top: -9999px !important; width: 1px !important; height: 1px !important; overflow: hidden !important; visibility: hidden !important; pointer-events: none !important; }
+
+/* Skill legend helpers */
+.skill-legend-frame { box-shadow: 0 0 12px rgba(124,58,237,0.20), 0 6px 16px rgba(124,58,237,0.08); }
+.skill-badge { padding: 5px; box-sizing: border-box; white-space: normal; text-align: center; overflow-wrap: anywhere; word-break: break-word; }
+.skill-badge-measure { padding: 5px; box-sizing: border-box; white-space: normal; }
+
+/* Consistent small caption */
+.caption-small { font-size: 0.82rem; color: #6b7280; }
+
 /* Focus states */
 button:focus-visible, a:focus-visible { outline: 2px solid #3b82f6; outline-offset: 2px; }
 
@@ -633,6 +680,44 @@ button:focus-visible, a:focus-visible { outline: 2px solid #3b82f6; outline-offs
 }
 .about-bottom-spacer { height: 16rem; min-height: 16rem; }
 .hobby-wrap { position: relative; margin-bottom: 3rem; flex-shrink: 0; }
+
+/* Per-hobby active classes: set a darker inner border and a soft matching glow.
+   Kept in index.css so these presentational styles are centralized and never
+   rely on runtime-generated Tailwind utilities. */
+.hobby-active-geography { position: relative; z-index: 60; overflow: visible; }
+.hobby-active-geography > [data-slot="badge"] {
+  border-width: 4px !important;
+  border-color: #1e40af !important; /* blue-800 */
+  box-shadow: 0 6px 20px rgba(30,64,175,0.35);
+}
+
+.hobby-active-gaming { position: relative; z-index: 60; overflow: visible; }
+.hobby-active-gaming > [data-slot="badge"] {
+  border-width: 4px !important;
+  border-color: #14532d !important; /* darker green */
+  box-shadow: 0 6px 20px rgba(20,83,45,0.35);
+}
+
+.hobby-active-fitness { position: relative; z-index: 60; overflow: visible; }
+.hobby-active-fitness > [data-slot="badge"] {
+  border-width: 4px !important;
+  border-color: #991b1b !important; /* red-800 */
+  box-shadow: 0 6px 20px rgba(153,27,27,0.35);
+}
+
+.hobby-active-smart-home { position: relative; z-index: 60; overflow: visible; }
+.hobby-active-smart-home > [data-slot="badge"] {
+  border-width: 4px !important;
+  border-color: #0f766e !important; /* teal-800 */
+  box-shadow: 0 6px 20px rgba(15,118,110,0.35);
+}
+
+.hobby-active-education { position: relative; z-index: 60; overflow: visible; }
+.hobby-active-education > [data-slot="badge"] {
+  border-width: 4px !important;
+  border-color: #b45309 !important; /* yellow/amber-800 */
+  box-shadow: 0 6px 20px rgba(180,83,9,0.35);
+}
 .about-close { margin-left: auto; color: #6b7280; font-weight: 700; font-size: 1.125rem; }
 .about-close:hover { color: #000; }
 .hobby-popover-mobile { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90vw; max-width: 90vw; max-height: 80vh; overflow-y: auto; background: rgba(255,255,255,0.95); border-radius: 0.75rem; box-shadow: 0 8px 32px rgba(0,0,0,0.15); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
@@ -2295,7 +2380,6 @@ button:focus-visible, a:focus-visible { outline: 2px solid #3b82f6; outline-offs
       color: oklch(.205 0 0);
     }
   }
-}
 
 @keyframes float {
   0% { opacity: .6; transform: translateY(0)rotate(0)translateX(0); }

@@ -1,6 +1,6 @@
 import React from 'react';
-import { projects, featuredProjectIds } from '../data/projects';
-import type { Project, Skill } from '../data/projects';
+import { projects, featuredProjectIds } from '../../public/data/projects';
+import type { Project, Skill } from '../../public/data/projects';
 import { SkillBadge } from './SkillBadge';
 import { Button } from './ui/button';
 import { getSkillCategory } from './utils/skillCategories';
@@ -88,8 +88,7 @@ function MinimalProjectTile({ project, onOpenImages, onOpenVideo }: { project: P
 
   return (
     <div
-      className={`group relative w-full overflow-hidden rounded-xl border-2 border-purple-800 bg-white p-[10px] hover:shadow-2xl transition-all duration-300 ring-2 ring-purple-400/18 group-hover:ring-6 group-hover:ring-purple-500/30 ${isMobile ? 'cursor-pointer' : ''}`}
-      style={{ boxShadow: '0 0 12px rgba(124,58,237,0.22), 0 6px 18px rgba(124,58,237,0.10)', display: 'flex', flexDirection: 'column' }}
+      className={`group relative w-full overflow-hidden rounded-xl border-2 border-purple-800 bg-white p-[10px] hover:shadow-2xl transition-all duration-300 ring-2 ring-purple-400/18 group-hover:ring-6 group-hover:ring-purple-500/30 more-projects-frame ${isMobile ? 'cursor-pointer' : ''}`}
       onClick={handleTileClick}
       role={isMobile ? 'button' : undefined}
       tabIndex={isMobile ? 0 : undefined}
@@ -97,7 +96,7 @@ function MinimalProjectTile({ project, onOpenImages, onOpenVideo }: { project: P
     >
       {/* Mobile-only title placed above the image to avoid overlap */}
       {isMobile && (
-        <div style={{padding: '18px 18px 8px 18px'}}>
+        <div className="more-projects-mobile-title">
           <div className="text-black text-base font-semibold">{project.title}</div>
         </div>
       )}
@@ -105,7 +104,7 @@ function MinimalProjectTile({ project, onOpenImages, onOpenVideo }: { project: P
       {/* Media area with fixed aspect to control height relative to width */}
       <div className="relative w-full aspect-[16/9] bg-white">
         {/* Desktop/tablet title bar overlay (hidden on mobile) */}
-  <div className="hidden md:block absolute z-10 bottom-3 left-0 pr-2 py-2 rounded-md bg-black/55 text-black text-sm font-semibold pointer-events-none transition-opacity duration-200 group-hover:opacity-0 shadow" style={{ marginLeft: 16 }}>
+  <div className="hidden md:block absolute z-10 bottom-3 left-0 pr-2 py-2 rounded-md bg-black/55 text-black text-sm font-semibold pointer-events-none transition-opacity duration-200 group-hover:opacity-0 shadow ml-16-abs">
           {project.title}
         </div>
 
@@ -125,7 +124,7 @@ function MinimalProjectTile({ project, onOpenImages, onOpenVideo }: { project: P
         </div>
 
   {/* Hover overlay (covers image completely) */}
-  <div className="absolute inset-0 bg-white pt-4 md:pt-5 px-4 md:px-5 pb-16 flex flex-col opacity-0 group-hover:opacity-100 transition-opacity duration-200" style={{ pointerEvents: isMobile ? 'none' : undefined }}>
+  <div className={`absolute inset-0 bg-white pt-4 md:pt-5 px-4 md:px-5 pb-16 flex flex-col opacity-0 group-hover:opacity-100 transition-opacity duration-200 ${isMobile ? 'pointer-none' : ''}`}>
           <div className="mb-2">
             <br/>
             <div className="text-xs text-gray-600">{project.company} • {project.duration}</div>
@@ -140,7 +139,7 @@ function MinimalProjectTile({ project, onOpenImages, onOpenVideo }: { project: P
           )}
 
           {/* Pinned action buttons: bottom-centered, 10px offset using inline style to avoid tailwind purge/config issues */}
-          <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-4 whitespace-nowrap" style={{ bottom: 10 }}>
+          <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-4 whitespace-nowrap hover-action-bottom">
             {allProjectImages.length > 0 && (
               <Button
                 variant="outline"

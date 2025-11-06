@@ -3,7 +3,7 @@ import { Badge } from "./ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Palette } from "lucide-react";
 import { skillCategories, getSkillsByCategory, getSkillCategory } from "./utils/skillCategories";
-import { projects } from "../data/projects";
+import { projects } from "../../public/data/projects";
 
 interface SkillLegendProps {
   selectedCategory?: string | null;
@@ -116,8 +116,7 @@ export function SkillLegend({ selectedCategory, selectedSkill, onCategorySelect,
   return (
     
     <Card
-      className="relative z-20 mt-8 border-2 border-purple-700 ring-3 ring-purple-400/22 hover:ring-4 hover:ring-purple-500/30 transition-shadow duration-300"
-      style={{ boxShadow: '0 0 12px rgba(124,58,237,0.20), 0 6px 16px rgba(124,58,237,0.08)' }}
+      className="relative z-20 mt-8 border-2 border-purple-700 ring-3 ring-purple-400/22 hover:ring-4 hover:ring-purple-500/30 transition-shadow duration-300 skill-legend-frame"
     >
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-base justify-center">
@@ -154,11 +153,10 @@ export function SkillLegend({ selectedCategory, selectedSkill, onCategorySelect,
                       variant="outline"
                       className={`text-xs border transition-all duration-200 max-w-full whitespace-normal break-words text-center ${category.color} ${category.bgColor} ${category.borderColor} ${
                         isClickable ? 'cursor-pointer hover:scale-105 hover:shadow-md' : ''
-                      } w-full h-full flex items-center justify-center`}
-                      style={{ padding: '5px' }}
+                      } w-full h-full flex items-center justify-center skill-badge`}
                       onClick={() => isClickable && handleCategoryClick(category.name)}
                     >
-                      <span style={{ whiteSpace: 'normal', textAlign: 'center' }}>{category.name}</span>
+                      <span className="text-xs">{category.name}</span>
                     </Badge>
                   </div>
 
@@ -188,21 +186,15 @@ export function SkillLegend({ selectedCategory, selectedSkill, onCategorySelect,
                         <div key={skill} className="flex items-center">
                           <div
                             ref={(el) => { badgeRefs.current[refKey] = el; }}
-                            className={`inline-flex items-center justify-center transition-all duration-150 ${category.bgColor} ${category.borderColor} ${category.color} rounded border cursor-pointer hover:scale-105 hover:shadow-sm ${skillRing}`}
+                            className={`inline-flex items-center justify-center transition-all duration-150 ${category.bgColor} ${category.borderColor} ${category.color} rounded border cursor-pointer hover:scale-105 hover:shadow-sm ${skillRing} skill-badge`}
                             style={{
-                              padding: '5px',
-                              textAlign: 'center',
-                              boxSizing: 'border-box',
-                              whiteSpace: 'normal',
-                              overflowWrap: 'anywhere',
-                              wordBreak: 'break-word',
                               width: maxSkillSize ? `${Math.min(maxSkillSize.width, 240)}px` : undefined,
                               maxWidth: '100%',
                               minHeight: maxSkillSize ? `${maxSkillSize.height}px` : '2rem',
                             }}
                             onClick={() => handleSkillClick(category.name, skill)}
                           >
-                            <span className="text-xs" style={{ whiteSpace: 'normal', textAlign: 'center' }}>{skill}</span>
+                            <span className="text-xs">{skill}</span>
                           </div>
                         </div>
                       );
@@ -224,15 +216,14 @@ export function SkillLegend({ selectedCategory, selectedSkill, onCategorySelect,
         </p>
       </CardContent>
       {/* Offscreen measurement helpers: render every skill and category once (hidden) so we can compute the max sizes */}
-      <div aria-hidden style={{ position: 'absolute', left: -9999, top: -9999, width: 'auto', height: 'auto', overflow: 'hidden', visibility: 'hidden', pointerEvents: 'none' }}>
+      <div aria-hidden className="visually-hidden">
         {allSkillsForMeasurement.map(({ key, skill, category }) => {
           const refKey = `measure::${key}::${skill}`;
           return (
             <div
               key={refKey}
               ref={(el) => { badgeRefs.current[refKey] = el; }}
-              className={`inline-flex items-center justify-center transition-all duration-150 ${category.bgColor} ${category.borderColor} ${category.color} rounded border`}
-                style={{ padding: '5px', boxSizing: 'border-box', whiteSpace: 'normal' }}
+              className={`inline-flex items-center justify-center transition-all duration-150 ${category.bgColor} ${category.borderColor} ${category.color} rounded border skill-badge-measure`}
             >
               <span className="text-xs">{skill}</span>
             </div>
@@ -245,8 +236,7 @@ export function SkillLegend({ selectedCategory, selectedSkill, onCategorySelect,
             <div
               key={refKey}
               ref={(el) => { badgeRefs.current[refKey] = el; }}
-              className={`inline-flex items-center justify-center ${category.bgColor} ${category.borderColor} ${category.color} rounded border`}
-                style={{ padding: '5px', boxSizing: 'border-box', whiteSpace: 'normal' }}
+              className={`inline-flex items-center justify-center ${category.bgColor} ${category.borderColor} ${category.color} rounded border skill-badge-measure`}
             >
               <span className="text-xs">{category.name}</span>
             </div>
