@@ -14,6 +14,7 @@ export interface Project {
   // Optional list of videos similar to images, each with its own description
   projectVideo?: { src: string; description?: any }[];
   projectImages?: { src: string; description?: any }[];
+  url?: string;
 }
 
 export interface Skill {
@@ -178,6 +179,30 @@ export const projects: Project[] = [
     type: 'job',
     images: [{ src: '/images/companies/yookr-logo.webp', description: 'Yookr company logo' }],
     projectImages: [{ src: '/images/projects/yookrpresentation.webp', description: 'Presentation at an event where we showcase what Yookr employees have been working on to the public.' }],
+  },
+  {
+    id: 'poppythorn',
+    company: 'Personal Project',
+    title: 'Poppythorn.nl',
+    role: 'Creator',
+    duration: '2025 - Present',
+    description: "The definitive encyclopedia for my fantasy world of Sadiphus. Discover the lore, people, and places that shape this realm. This project is a way for people to interact with the world that I'm creating in a fun and engaging way.",
+    skills: [
+      { name: 'React', usage: 'Frontend UI component structure.' },
+      { name: 'TypeScript', usage: 'Type safety for the application.' },
+      { name: 'Next.js', usage: 'Framework for server-side rendering and routing.' },
+      { name: 'PostgreSQL', usage: 'Relational database for storing encyclopedia data.' },
+      { name: 'Supabase', usage: 'Backend-as-a-Service for database and auth.' },
+      { name: 'S3', usage: 'Storage for user-uploaded images and assets.' },
+      { name: 'React Three Fiber', usage: 'Interactive 3D view of the world.' },
+    ],
+    type: 'project',
+    url: 'https://poppythorn.nl',
+    images: [{ src: '/images/projects/poppythorn/welcome.png', description: 'Home screen' }],
+    projectImages: [
+      { src: '/images/projects/poppythorn/3d-view.png', description: '3D view of the world created with React Three Fiber' },
+      { src: '/images/projects/poppythorn/content.png', description: 'Encyclopedia content page, this example shows a country page' },
+    ],
   },
 ];
 

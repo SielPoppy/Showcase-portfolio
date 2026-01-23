@@ -14,14 +14,14 @@ export const skillCategories = {
     borderColor: "border-blue-300"
   },
   "Frontend Technologies": {
-    name: "Frontend Technologies", 
+    name: "Frontend Technologies",
     color: "text-green-800",
     bgColor: "bg-green-100 hover:bg-green-200",
     borderColor: "border-green-300"
   },
   "Backend Technologies": {
     name: "Backend Technologies",
-    color: "text-red-800", 
+    color: "text-red-800",
     bgColor: "bg-red-100 hover:bg-red-200",
     borderColor: "border-red-300"
   },
@@ -52,7 +52,7 @@ export const skillCategories = {
   "IoT & Embedded": {
     name: "IoT & Embedded",
     color: "text-amber-900",
-    
+
     bgColor: "bg-amber-300 hover:bg-amber-400 shadow-sm",
     borderColor: "border-amber-400"
   },
@@ -74,29 +74,30 @@ export const skillCategories = {
 export const skillMapping: Record<string, keyof typeof skillCategories> = {
   // Programming Languages
   "TypeScript": "Programming Languages",
-  "JavaScript": "Programming Languages", 
+  "JavaScript": "Programming Languages",
   "Python": "Programming Languages",
   "Java": "Programming Languages",
   "C++": "Programming Languages",
   "C#": "Programming Languages",
   "Rust": "Programming Languages",
-  
+
   // Frontend Technologies
   "React": "Frontend Technologies",
   "Next.js": "Frontend Technologies",
   "HTML5": "Frontend Technologies",
   "CSS3": "Frontend Technologies",
   "Tailwind CSS": "Frontend Technologies",
-  
-  
+  "React Three Fiber": "Frontend Technologies",
+
+
   "Node.js": "Backend Technologies",
   "Express.js": "Backend Technologies",
   ".NET": "Backend Technologies",
   ".Net": "Backend Technologies",
   "Actix-web": "Backend Technologies",
   "REST APIs": "Backend Technologies",
-  
-  
+
+
   "MongoDB": "Databases & Storage",
   "SQL": "Databases & Storage",
   "MySQL": "Databases & Storage",
@@ -104,8 +105,10 @@ export const skillMapping: Record<string, keyof typeof skillCategories> = {
   "DynamoDB": "Databases & Storage",
   "S3": "Databases & Storage",
   "Firebase": "Databases & Storage",
-  
-  
+  "PostgreSQL": "Databases & Storage",
+  "Supabase": "Databases & Storage",
+
+
   "AWS": "Cloud & DevOps",
   "Azure": "Cloud & DevOps",
   "Lambda": "Cloud & DevOps",
@@ -117,15 +120,15 @@ export const skillMapping: Record<string, keyof typeof skillCategories> = {
   "Docker": "Cloud & DevOps",
   "Kubernetes": "Cloud & DevOps",
   "Webhooks": "Cloud & DevOps",
-  
-  
+
+
   "Figma": "Design & UX Tools",
   "UI/UX Design": "Design & UX Tools",
   "Wireframing": "Design & UX Tools",
   "Prototyping": "Design & UX Tools",
   "User Research": "Design & UX Tools",
-  
-  
+
+
   "Git": "Development Tools",
   "GitHub": "Development Tools",
   "Jest": "Development Tools",
@@ -134,18 +137,18 @@ export const skillMapping: Record<string, keyof typeof skillCategories> = {
   "Automated Testing": "Development Tools",
   "OpenAI APIs": "Development Tools",
   "Google APIs": "Development Tools",
-  
-  
+
+
   "Agile": "Soft Skills",
   "Scrum": "Soft Skills",
   "Project Management": "Soft Skills",
   "Team Leadership": "Soft Skills",
   "Team Coordination": "Soft Skills",
   "Testing": "Soft Skills",
-  
-  
+
+
   "Problem Solving": "Personal Skills",
-  "Goal Setting": "Personal Skills", 
+  "Goal Setting": "Personal Skills",
   "Discipline": "Personal Skills",
   "Strategic Planning": "Personal Skills",
   "Quick Decision Making": "Personal Skills",
@@ -158,10 +161,10 @@ export const skillMapping: Record<string, keyof typeof skillCategories> = {
   "Automation": "Personal Skills",
   "Time Management": "Personal Skills",
   "Technical Writing": "Personal Skills",
-  
+
   "IoT": "IoT & Embedded",
   "LoRaWAN": "IoT & Embedded"
- };
+};
 
 
 export function getSkillCategory(skill: string): SkillCategory {
@@ -169,12 +172,12 @@ export function getSkillCategory(skill: string): SkillCategory {
   if (categoryKey && skillCategories[categoryKey]) {
     return skillCategories[categoryKey];
   }
-  
-  
+
+
   return {
     name: "Other",
     color: "text-slate-700",
-    bgColor: "bg-slate-50 hover:bg-slate-100", 
+    bgColor: "bg-slate-50 hover:bg-slate-100",
     borderColor: "border-slate-200"
   };
 }

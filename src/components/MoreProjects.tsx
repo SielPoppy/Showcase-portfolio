@@ -20,9 +20,9 @@ export default function MoreProjects({ onOpenVideo, onOpenImages }: Props) {
     <div className="mt-20">
       <div className="text-center mb-8">
         <h3 className="featured-subtitle">More projects</h3>
-        <br/>
+        <br />
         <p className="text-gray-700">Explore additional work and experiences</p>
-        <br/>
+        <br />
       </div>
 
       {/* Match featured card width: 1 col on small, 2 cols on lg with same gap */}
@@ -104,7 +104,7 @@ function MinimalProjectTile({ project, onOpenImages, onOpenVideo }: { project: P
       {/* Media area with fixed aspect to control height relative to width */}
       <div className="relative w-full aspect-[16/9] bg-white">
         {/* Desktop/tablet title bar overlay (hidden on mobile) */}
-  <div className="hidden md:block absolute z-10 bottom-3 left-0 pr-2 py-2 rounded-md bg-black/55 text-black text-sm font-semibold pointer-events-none transition-opacity duration-200 group-hover:opacity-0 shadow ml-16-abs">
+        <div className="hidden md:block absolute z-10 bottom-3 left-0 pr-2 py-2 rounded-md bg-black/55 text-black text-sm font-semibold pointer-events-none transition-opacity duration-200 group-hover:opacity-0 shadow ml-16-abs">
           {project.title}
         </div>
 
@@ -123,10 +123,10 @@ function MinimalProjectTile({ project, onOpenImages, onOpenVideo }: { project: P
           )}
         </div>
 
-  {/* Hover overlay (covers image completely) */}
-  <div className={`absolute inset-0 bg-white pt-4 md:pt-5 px-4 md:px-5 pb-16 flex flex-col opacity-0 group-hover:opacity-100 transition-opacity duration-200 ${isMobile ? 'pointer-none' : ''}`}>
+        {/* Hover overlay (covers image completely) */}
+        <div className={`absolute inset-0 bg-white pt-4 md:pt-5 px-4 md:px-5 pb-16 flex flex-col opacity-0 group-hover:opacity-100 transition-opacity duration-200 ${isMobile ? 'pointer-none' : ''}`}>
           <div className="mb-2">
-            <br/>
+            <br />
             <div className="text-xs text-gray-600">{project.company} • {project.duration}</div>
           </div>
           <div className="text-sm text-gray-800 leading-relaxed flex-1">{project.description}</div>
@@ -179,6 +179,24 @@ function MinimalProjectTile({ project, onOpenImages, onOpenVideo }: { project: P
                 View Video
               </Button>
             ) : null}
+            {project.url && (
+              <Button
+                variant="outline"
+                className="border-purple-400 text-purple-700 hover:bg-purple-50 px-6 py-2 rounded-full shadow flex items-center gap-2"
+                onClick={(e: React.MouseEvent) => {
+                  e.stopPropagation();
+                  window.open(project.url, '_blank', 'noopener,noreferrer');
+                }}
+                aria-label={`Visit website for ${project.company}`}
+              >
+                <span className="inline-flex items-center justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 text-purple-600">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                  </svg>
+                </span>
+                Visit Site
+              </Button>
+            )}
           </div>
         </div>
       </div>
