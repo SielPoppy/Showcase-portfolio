@@ -204,6 +204,33 @@ export const projects: Project[] = [
       { src: '/images/projects/poppythorn/content.png', description: 'Encyclopedia content page, this example shows a country page' },
     ],
   },
+  {
+    id: 'sielfavs',
+    company: 'Personal Project',
+    title: 'Media Vault',
+    role: 'Creator',
+    duration: 'January 2026 - February 2026',
+    description: "A centralized media management hub that tracks my collection across multiple platforms. It features real-time Steam achievements and playtime tracking, MyAnimeList integration for anime/manga progress, and TMDB for movies and TV shows. The project uses a high-performance Rust backend deployed as Cloudflare Workers.",
+    skills: [
+      { name: 'Next.js', usage: 'Built the frontend dashboard with server-side rendering.' },
+      { name: 'React', usage: 'Developed interactive UI components and state management.' },
+      { name: 'TypeScript', usage: 'Ensured type safety across the full stack.' },
+      { name: 'Rust', usage: 'Implemented high-performance backend microservices.' },
+      { name: 'Cloudflare Workers', usage: 'Serverless platform for API gateway and services.' },
+      { name: 'Cloudflare D1', usage: 'Managed SQL database for persistent storage.' },
+      { name: 'Tailwind CSS', usage: 'Responsive and modern UI styling.' },
+      { name: 'REST APIs', usage: 'Integrated third-party data from Steam, MAL, and TMDB.' },
+      { name: 'Auth0', usage: 'Secure user authentication and authorization.' },
+    ],
+    type: 'project',
+    url: 'https://media.yourivanbaal.nl',
+    images: [{ src: '/images/projects/sielfavs/games.webp', description: 'Games Overview - Steam stats and achievement tracking' }],
+    projectImages: [
+      { src: '/images/projects/sielfavs/game-analysis.webp', description: 'Game Analysis - Detailed statistics and progress for games that I have played' },
+      { src: '/images/projects/sielfavs/games.webp', description: 'Games Library - Collection of my favourite games and games that I am currently playing' },
+      { src: '/images/projects/sielfavs/music.webp', description: 'Music Collection - Collection of my favourite music' },
+    ],
+  }
 ];
 
 // Configure which projects are featured on the main page. Update these IDs to change featured projects.
