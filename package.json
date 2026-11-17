@@ -64,13 +64,21 @@
     "build": "cross-env PORT=3000 vite build",
     "prestart": "node ./scripts/generate-hobby-manifest.js",
     "start": "npm run build && cross-env PORT=3004 node server.cjs",
-    "preview": "vite preview --port 3000"
+    "preview": "vite preview --port 3000",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src/App.tsx src/components/AboutSection.tsx src/components/FeaturedProjects.tsx src/components/MoreProjects.tsx src/components/ProjectCard.tsx src/components/SideNavbar.tsx src/components/SkillLegend.tsx src/components/ui/button.tsx src/data/*.ts src/editor/*.tsx scripts/portfolio-editor.ts scripts/editor.test.ts src/components/utils/skillCategories.ts",
+    "edit": "vite --mode editor --host 127.0.0.1",
+    "test:editor": "node --experimental-strip-types --test scripts/editor.test.ts"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.16",
     "@types/node": "^24.9.2",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
-    "autoprefixer": "^10.4.21"
+    "@typescript-eslint/eslint-plugin": "^8.73.0",
+    "@typescript-eslint/parser": "^8.73.0",
+    "autoprefixer": "^10.4.21",
+    "eslint": "^9.39.5",
+    "typescript": "~5.9.3"
   }
 }

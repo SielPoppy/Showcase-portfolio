@@ -117,7 +117,7 @@ export function SideNavbar() {
   };
 
   return (
-    <nav className="sidenav">
+    <nav className="sidenav" aria-label="Main navigation">
       <div className="sidenav-panel">
         <div className="sidenav-list">
           {navItems.map((item) => {
@@ -129,6 +129,8 @@ export function SideNavbar() {
                 onClick={() => scrollToSection(item.id)}
                 className={`sidenav-button ${isActive ? 'sidenav-button-active' : 'sidenav-button-inactive'}`}
                 title={item.label}
+                aria-label={item.label}
+                aria-current={isActive ? 'location' : undefined}
               >
                 <div className={`sidenav-icon ${isActive ? 'sidenav-icon-active' : 'sidenav-icon-hover'}`}>
                   {item.icon}

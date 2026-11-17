@@ -7,8 +7,7 @@ import ImageModal from './components/ImageModal';
 import VideoModal from './components/VideoModal';
 import FloatingEmojis from './components/FloatingEmojis';
 import { SideNavbar } from './components/SideNavbar';
-import { getSkillCategory, skillCategories } from './components/utils/skillCategories';
-import { projects, personalInfo } from '../public/data/projects';
+import { portfolioContent, type PortfolioContent, type Project } from './data/portfolio';
 import ImageWithFallback from './components/figma/ImageWithFallback';
 import ErrorBoundary from './components/ErrorBoundary';
 import { AboutSection } from './components/AboutSection';
@@ -26,12 +25,11 @@ const LinkedInIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
 
 
 
-export default function App() {
-  const [selectedCategory, setSelectedCategory] = React.useState<string | null>(null);
-  const [selectedSkill, setSelectedSkill] = React.useState<string | null>(null);
+export default function App({ content = portfolioContent }: { content?: PortfolioContent }) {
+  const { personalInfo } = content;
   const [video, setVideo] = React.useState<{ url: string; title?: string; description?: React.ReactNode } | null>(null);
   const [imageModalOpen, setImageModalOpen] = React.useState(false);
-  const [modalImages, setModalImages] = React.useState<any[]>([]);
+  const [modalImages, setModalImages] = React.useState<NonNullable<Project['images']>>([]);
   const [modalImageIndex, setModalImageIndex] = React.useState(0);
 
   // Whether any modal is currently open (used to dim the page and block scroll)
@@ -50,31 +48,8 @@ export default function App() {
     };
   }, [isModalOpen]);
 
-  const filteredProjects = selectedCategory
-    ? projects.filter((project) => Array.isArray(project.skills) && project.skills.some((skill: any) => getSkillCategory((skill && skill.name) ? skill.name : String(skill)).name === selectedCategory))
-    : projects;
-
-  // If a skill is selected, override to filter by skill name
-  const fullyFilteredProjects = selectedSkill
-    ? projects.filter((project) => Array.isArray(project.skills) && project.skills.some((skill: any) => {
-        const name = (skill && skill.name) ? skill.name : String(skill);
-        return name === selectedSkill;
-      }))
-    : filteredProjects;
-
-  const activeCategoryObj = selectedSkill
-    ? getSkillCategory(selectedSkill)
-    : selectedCategory
-    ? (skillCategories as any)[selectedCategory as keyof typeof skillCategories]
-    : null;
-
-  const badgeBg = activeCategoryObj ? activeCategoryObj.bgColor : 'bg-purple-100';
-  const badgeColor = activeCategoryObj ? activeCategoryObj.color : 'text-purple-800';
-  const badgeBorder = activeCategoryObj ? activeCategoryObj.borderColor : 'border-purple-200';
-  const badgeRing = activeCategoryObj ? `${activeCategoryObj.borderColor.replace('border-', 'ring-')} ring-offset-2 ring-2` : 'ring-purple-500 ring-offset-2 ring-2';
-
   const handleOpenVideo = (v: { url: string; title?: string; description?: React.ReactNode }) => setVideo(v);
-  const handleOpenImages = (images: any[]) => {
+  const handleOpenImages = (images: NonNullable<Project['images']>) => {
     setModalImages(images);
     setModalImageIndex(0);
     setImageModalOpen(true);
@@ -83,17 +58,19 @@ export default function App() {
 
   // Colors and decorative seams moved to CSS classes
 
-   return (
+  return (
     <ErrorBoundary>
       {/* Main content — dim when a modal is open. Modals are rendered as siblings so
           the dimming filter doesn't affect them. */}
-  <div className={`app-shell`}>
-  {/* Layer host for floating emojis so they sit above section backgrounds but below content */}
-  <div id="emoji-root" aria-hidden />
-  {/* Render emojis inside the app shell (between backgrounds and content). We avoid filter issues by not using page-dim. */}
-  <FloatingEmojis z={10} containerId="emoji-root" />
+      <div className={`app-shell`}>
+        {/* Layer host for floating emojis so they sit above section backgrounds but below content */}
+        <div id="emoji-root" aria-hidden />
+        {/* Render emojis inside the app shell (between backgrounds and content). We avoid filter issues by not using page-dim. */}
+        <FloatingEmojis z={10} containerId="emoji-root" />
 
+        <a href="#projects" className="skip-link">Skip to projects</a>
         <SideNavbar />
+        <main>
 
         {/* Hero */}
         <section id="hero" className="hero-section">
@@ -114,101 +91,74 @@ export default function App() {
               <div className="space-y-6">
                 <h1 className="hero-name">{personalInfo.name}</h1>
                 <p className="hero-title">{personalInfo.title}</p>
+                <p className="hero-subtitle">{personalInfo.heroSummary}</p>
               </div>
 
               <div className="cta-row text-gray-700">
                 <div className="cta-group">
-                  <a href={`mailto:${personalInfo.email}`} aria-label={`Email ${personalInfo.email}`} className="inline-block">
-                    <Button size="lg" className="btn-email">
+                  <Button asChild size="lg" className="btn-email"><a href={`mailto:${personalInfo.email}`} aria-label={`Email ${personalInfo.email}`} className="inline-block">
                       <Mail className="w-4 h-4 mr-2" />{personalInfo.email}
-                    </Button>
-                  </a>
-
-                  {personalInfo.secondaryEmail && (
-                    <a href={`mailto:${personalInfo.secondaryEmail}`} aria-label={`Email ${personalInfo.secondaryEmail}`} className="inline-block">
-                      <Button size="lg" className="btn-email">
-                        <Mail className="w-4 h-4 mr-2" />{personalInfo.secondaryEmail}
-                      </Button>
-                    </a>
-                  )}
+                    </a></Button>
                 </div>
 
                 <div className="phone-group">
-                  <a href={`tel:${personalInfo.phone}`} aria-label={`Call ${personalInfo.phone}`} className="inline-block">
-                    <Button size="lg" className="btn-phone">
+                  <Button asChild size="lg" className="btn-phone"><a href={`tel:${personalInfo.phone}`} aria-label={`Call ${personalInfo.phone}`} className="inline-block">
                       <span className="text-lg mr-2">📞</span>
                       {personalInfo.phone}
-                    </Button>
-                  </a>
+                    </a></Button>
                 </div>
               </div>
 
               <div className="cta-row mb-0">
-                <a href="/document/Resume.pdf" download="Resume.pdf" className="inline-block">
-                  <Button size="lg" className="btn-resume">
+                <Button asChild size="lg" className="btn-resume"><a href="#projects">Explore my work</a></Button>
+                <Button asChild size="lg" className="btn-resume"><a href={personalInfo.resumeUrl} download="Resume.pdf" className="inline-block">
                     <Download className="w-4 h-4 mr-2" />
-                    Download Resume
-                  </Button>
-                </a>
-                <a href="https://www.linkedin.com/in/youri-van-baal-114198332/" target="_blank" rel="noopener noreferrer">
-                  <Button size="lg" className="btn-linkedin"><LinkedInIcon className="w-4 h-4 mr-2" />LinkedIn</Button>
-                </a>
+                    Download CV
+                  </a></Button>
+                <Button asChild size="lg" className="btn-linkedin"><a href={personalInfo.linkedin} target="_blank" rel="noopener noreferrer"><LinkedInIcon className="w-4 h-4 mr-2" />LinkedIn</a></Button>
               </div>
             </div>
           </div>
         </section>
 
-  {/* Featured Projects (uses featured IDs in data/projects.ts) */}
-  <section id="projects" className="projects-section">
-    <FeaturedProjects onOpenVideo={handleOpenVideo} onOpenImages={handleOpenImages} />
-  </section>
+        {/* Project content is also used by the editor preview. */}
+        <section id="projects" className="projects-section">
+          <FeaturedProjects projects={content.projects} featuredProjectIds={content.featuredProjectIds} onOpenVideo={handleOpenVideo} onOpenImages={handleOpenImages} />
+        </section>
 
-  {/* Projects carousel always visible below featured projects */}
+        {/* Use the dedicated AboutSection component which includes hobby badges and responsive layout */}
+        <AboutSection />
 
-
-  {/* Use the dedicated AboutSection component which includes hobby badges and responsive layout */}
-  <AboutSection />
-
-  <section id="contact" className="contact-section">
+        <section id="contact" className="contact-section">
           <div className="contact-inner">
             <div className="pt-12 pb-6 mb-0">
               <h2 className="section-title">Invite me over for a coffee ☕</h2>
 
-              <p className="section-subtitle">I'm actively seeking internship opportunities where I can apply my skills and contribute to meaningful projects. Contact me to discuss potential collaborations!</p>
+              <p className="section-subtitle">{personalInfo.contactMessage}</p>
             </div>
-              <div className="contact-grid">
+            <div className="contact-grid">
               <div className="contact-left">
                 {/* Emails side-by-side and centered */}
                 <div className="cta-row">
-                  <a href={`mailto:${personalInfo.email}`} aria-label={`Email ${personalInfo.email}`} className="inline-block">
-                    <Button size="lg" className="btn-email">
+                  <Button asChild size="lg" className="btn-email"><a href={`mailto:${personalInfo.email}`} aria-label={`Email ${personalInfo.email}`} className="inline-block">
                       <Mail className="w-4 h-4 mr-2" />{personalInfo.email}
-                    </Button>
-                  </a>
-                  {personalInfo.secondaryEmail && (
-                    <a href={`mailto:${personalInfo.secondaryEmail}`} aria-label={`Email ${personalInfo.secondaryEmail}`} className="inline-block">
-                      <Button size="lg" className="btn-email">
-                        <Mail className="w-4 h-4 mr-2" />{personalInfo.secondaryEmail}
-                      </Button>
-                    </a>
-                  )}
+                    </a></Button>
                 </div>
 
                 <div className="center-wrap">
-                  <a href={`tel:${personalInfo.phone}`} aria-label={`Call ${personalInfo.phone}`}>
-                    <Button size="lg" className="btn-phone">
+                  <Button asChild size="lg" className="btn-phone"><a href={`tel:${personalInfo.phone}`} aria-label={`Call ${personalInfo.phone}`}>
                       <span className="text-lg mr-2">📞</span>
                       {personalInfo.phone}
-                    </Button>
-                  </a>
+                    </a></Button>
                 </div>
 
                 <div className="center-wrap">
-                  <a href="https://www.linkedin.com/in/youri-van-baal-114198332/" target="_blank" rel="noopener noreferrer" aria-label="Open LinkedIn">
-                    <Button size="lg" className="btn-linkedin">
+                  <Button asChild size="lg" className="btn-resume"><a href={personalInfo.resumeUrl} download="Youri-van-Baal-CV.pdf"><Download className="w-4 h-4 mr-2" />Download CV</a></Button>
+                </div>
+                <div className="center-wrap">
+                  <Button asChild size="lg" className="btn-linkedin"><a href={personalInfo.linkedin} target="_blank" rel="noopener noreferrer" aria-label="Open LinkedIn">
                       <LinkedInIcon className="w-4 h-4 mr-2" />LinkedIn
-                    </Button>
-                  </a>
+                    </a></Button>
                 </div>
               </div>
             </div>
@@ -216,9 +166,10 @@ export default function App() {
           </div>
         </section>
 
+        </main>
         <footer className="site-footer">
           <div className="footer-inner">
-            <p className="footer-text">© 2025 {personalInfo.name}. Built with React, TypeScript, and Vite.</p>
+            <p className="footer-text">© {new Date().getFullYear()} {personalInfo.name}. Built with React, TypeScript, and Vite.</p>
           </div>
         </footer>
       </div>
@@ -240,7 +191,7 @@ export default function App() {
       )}
 
       {video && <VideoModal video={video} onClose={() => setVideo(null)} />}
-  {/* Projects carousel is rendered inline above — no modal here */}
+      {/* Projects carousel is rendered inline above — no modal here */}
     </ErrorBoundary>
   );
 }

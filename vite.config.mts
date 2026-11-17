@@ -4,14 +4,15 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 import * as path from 'path';
+import { portfolioEditor } from './scripts/portfolio-editor';
 
 
 // https://vitejs.dev/config/
 // Allow configuring the base path (useful when deploying under a subfolder like /about-me/)
 // Set BASE env var at build time: BASE=/about-me/
-export default defineConfig(() => ({
+export default defineConfig(({ mode }) => ({
     base: '/',
-    plugins: [react()],
+    plugins: [react(), ...(mode === 'editor' ? [portfolioEditor()] : [])],
     resolve: {
         extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
         alias: {
@@ -74,8 +75,8 @@ export default defineConfig(() => ({
     },
     server: {
         // Ensure the server is accessible on the network
-        host: '0.0.0.0',
+        host: mode === 'editor' ? '127.0.0.1' : '0.0.0.0',
         port: process.env.PORT ? parseInt(process.env.PORT, 10) : 3000,
-        open: true,
+        open: mode === 'editor' ? '/editor.html' : true,
     },
 }));

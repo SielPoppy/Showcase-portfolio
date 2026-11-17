@@ -119,6 +119,10 @@ export const skillMapping: Record<string, keyof typeof skillCategories> = {
   "CloudWatch": "Cloud & DevOps",
   "Docker": "Cloud & DevOps",
   "Kubernetes": "Cloud & DevOps",
+  "Cloudflare Workers": "Cloud & DevOps",
+  "Cloudflare D1": "Databases & Storage",
+  "Auth0": "Backend Technologies",
+  "Research": "Personal Skills",
   "Webhooks": "Cloud & DevOps",
 
 
@@ -180,6 +184,10 @@ export function getSkillCategory(skill: string): SkillCategory {
     bgColor: "bg-slate-50 hover:bg-slate-100",
     borderColor: "border-slate-200"
   };
+}
+
+export function isTechnicalSkill(skill: string): boolean {
+  return !['Soft Skills', 'Personal Skills'].includes(getSkillCategory(skill).name);
 }
 
 

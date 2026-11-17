@@ -2,8 +2,10 @@ import React from "react";
 import { Badge } from "./ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Palette } from "lucide-react";
-import { skillCategories, getSkillsByCategory, getSkillCategory } from "./utils/skillCategories";
-import { projects } from "../../public/data/projects";
+import { skillCategories, getSkillsByCategory } from "./utils/skillCategories";
+import { portfolioContent } from "../data/portfolio";
+
+const { projects } = portfolioContent;
 
 interface SkillLegendProps {
   selectedCategory?: string | null;
@@ -114,7 +116,7 @@ export function SkillLegend({ selectedCategory, selectedSkill, onCategorySelect,
   }, [expanded, selectedCategory, selectedSkill]);
 
   return (
-    
+
     <Card
       className="relative z-20 mt-8 border-2 border-purple-700 ring-3 ring-purple-400/22 hover:ring-4 hover:ring-purple-500/30 transition-shadow duration-300 skill-legend-frame"
     >
@@ -246,4 +248,3 @@ export function SkillLegend({ selectedCategory, selectedSkill, onCategorySelect,
     </Card>
   );
 }
- 

@@ -2,3 +2,5 @@ dist
 node_modules
 .idea
 /example-copy
+src/data/portfolio.json.backup
+src/data/portfolio.json.tmp

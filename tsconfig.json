@@ -6,14 +6,15 @@
     "jsx": "react-jsx",
     "strict": true,
     "skipLibCheck": true,
-    "ignoreDeprecations": "6.0",
+    "resolveJsonModule": true,
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
     "types": ["node", "vite/client"]
   },
   "include": [
-    "src",
+    "src/main.tsx",
+    "src/image-modules.d.ts",
     "vite.config.mts",
-    "scripts",
-    "index.html",
-    "server.cjs"
-, "public/data/projects.ts"  ]
+    "src/editor/main.tsx"
+  ]
 }

@@ -1,0 +1,662 @@
+{
+  "personalInfo": {
+    "name": "Youri van Baal",
+    "title": "Software Developer · Backend & Full-Stack Development",
+    "subtitle": "Passionate about building applications that can help people.",
+    "email": "mail@yourivanbaal.nl",
+    "phone": "(+31) 6 28817868",
+    "status": "Open to software developer opportunities",
+    "linkedin": "https://www.linkedin.com/in/youri-van-baal-114198332/",
+    "resumeUrl": "/document/Resume.pdf",
+    "heroSummary": "I build IoT backend services, automate database workflows, and create interactive web applications.",
+    "contactMessage": "I'm actively seeking job opportunities where I can apply my skills and contribute to meaningful projects. Contact me to discuss potential collaborations!"
+  },
+  "featuredProjectIds": [
+    "yookr-backend",
+    "bdo-database-validator",
+    "poppythorn",
+    "sielfavs"
+  ],
+  "projects": [
+    {
+      "id": "capgemini-deskmate",
+      "company": "Capgemini",
+      "title": "Deskmate",
+      "role": "Partner Project",
+      "duration": "Apr 2023 - Jun 2023",
+      "description": "Built backend logic and database storage for a workspace reservation application, helping offices manage a limited number of desks.",
+      "skills": [
+        {
+          "name": "C#",
+          "usage": "Implemented backend business logic and APIs."
+        },
+        {
+          "name": ".NET",
+          "usage": "Built services and web endpoints using .NET."
+        },
+        {
+          "name": "MySQL",
+          "usage": "Designed and queried the relational DB schema."
+        },
+        {
+          "name": "Git",
+          "usage": "Version control and collaboration."
+        },
+        {
+          "name": "Scrum",
+          "usage": "Scrummaster for our Trello board."
+        }
+      ],
+      "type": "project",
+      "images": [
+        {
+          "src": "/images/companies/capgemini-logo.webp",
+          "description": "Capgemini company logo"
+        }
+      ],
+      "projectImages": [
+        {
+          "src": "/images/projects/showcase/deskmate.webp",
+          "description": "Deskmate application screenshot showing desk reservation interface."
+        }
+      ],
+      "caseStudy": {
+        "problem": "When a lot of people work remotely, you don't need too much space in the office, but if there's more people than desks, how will people know if there's space for them at any given time?",
+        "contributions": [
+          "Worked on the backend logic for reserving seats.",
+          "Made sure the connection between backend and the database was done properly.",
+          "Was Scrummaster for the project."
+        ],
+        "approach": "By selecting a desk on the map you can reserve it for a time or see when it will be reserved by someone else. It was one large application with a MVC, BLL and DAL layer as it was what we were learning at the time.",
+        "result": "Web application where you can see all desks, reserve one for yourself and don't have to worry about arriving to a full office any more."
+      }
+    },
+    {
+      "id": "q3-cloudaiscanner",
+      "company": "Q3",
+      "title": "CloudAIScanner",
+      "role": "Partner Project",
+      "duration": "Sep 2023 - Jan 2024",
+      "description": "Researched API integrations and built backend logic for an AI-tool inventory application intended to support EU AI Act compliance work. Processed and stored information about the AI tools used by connected accounts.",
+      "skills": [
+        {
+          "name": "Google APIs",
+          "usage": "Got as much relevant data as possible from the API about AI tools used by an account."
+        },
+        {
+          "name": "OpenAI APIs",
+          "usage": "Got as much relevant data as possible from the API about AI tools used by an account."
+        },
+        {
+          "name": "DevOps",
+          "usage": "CI/CD pipelines and deployment automation."
+        },
+        {
+          "name": "C#",
+          "usage": "Core application logic."
+        },
+        {
+          "name": ".NET",
+          "usage": "Framework for services."
+        },
+        {
+          "name": "Automated Testing",
+          "usage": "Unit and integration tests. They ran using GitHub Actions."
+        },
+        {
+          "name": "Git",
+          "usage": "Source control."
+        },
+        {
+          "name": "Agile",
+          "usage": "Sprint planning, retrospectives, and daily stand-ups."
+        },
+        {
+          "name": "REST APIs",
+          "usage": "Designed and implemented HTTP APIs."
+        },
+        {
+          "name": "Problem Solving",
+          "usage": "Troubleshot integration issues."
+        },
+        {
+          "name": "Research",
+          "usage": "Investigated API capabilities and limitations."
+        },
+        {
+          "name": "Team Coordination",
+          "usage": "Coordinated work between team members and our stakeholders."
+        }
+      ],
+      "type": "project",
+      "images": [
+        {
+          "src": "/images/companies/q3-logo.webp",
+          "description": "Q3 company logo"
+        }
+      ],
+      "projectImages": [
+        {
+          "src": "/images/projects/showcase/cloudaiscanner.webp",
+          "description": "Here you can see details about a specific tool that you used."
+        },
+        {
+          "src": "/images/projects/showcase/cais.webp",
+          "description": "CloudAIScanner overview where you see all the AI tools used by the currently logged in user."
+        }
+      ],
+      "caseStudy": {
+        "problem": "The EU AI Act was announced that would require all companies to clearly list the AI that they were using for any task at the company. For that a tool was needed to easily collect and list those.",
+        "contributions": [
+          "Worked on backend logic."
+        ],
+        "approach": "Using endpoints from Google and OpenAI, you can retrieve all API keys that are connected to your account/organisation. Then by filtering the results you get an overview of all the AI. After then confirming if that list is right you can submit it for review to the EU. As this project was done a year before the act went into effect most AI companies didn't have documentation or endpoints for this data yet, so we limited it to platforms that did have it.",
+        "result": "A tool that allows users to list all used AIs/models that are in some way linked to connected accounts."
+      }
+    },
+    {
+      "id": "fontys-smart-classroom",
+      "company": "Fontys",
+      "title": "Smart Classroom",
+      "role": "Partner Project",
+      "duration": "Feb 2024 - June 2024",
+      "description": "Developed a 'Smart Classroom' where people can track assets moving around classrooms and track the air quality. I worked on receiving the data from the gateway devices, storing it and displaying it in a web application.",
+      "skills": [
+        {
+          "name": "IoT",
+          "usage": "We used Bluetooth Low Energy (BLE) for device communication."
+        },
+        {
+          "name": ".NET",
+          "usage": "Backend services for data ingestion."
+        },
+        {
+          "name": "C#",
+          "usage": "Server-side logic."
+        },
+        {
+          "name": "MongoDB",
+          "usage": "All the sensor data was stored in MongoDB."
+        },
+        {
+          "name": "Next.js",
+          "usage": "Frontend UI and dashboards."
+        },
+        {
+          "name": "TypeScript",
+          "usage": "We used TypeScript for type-safe code."
+        },
+        {
+          "name": "Git",
+          "usage": "Version control done using GitLab."
+        },
+        {
+          "name": "Agile",
+          "usage": "Team process."
+        },
+        {
+          "name": "REST APIs",
+          "usage": "APIs for device communication."
+        },
+        {
+          "name": "Problem Solving",
+          "usage": "Hardware & software troubleshooting. This was necessary for integrating various components since there was not a lot of documentation."
+        },
+        {
+          "name": "Team Coordination",
+          "usage": "Collaborated with hardware and software teams from different semesters to combine our knowledge and experience."
+        }
+      ],
+      "type": "project",
+      "images": [
+        {
+          "src": "/images/companies/fontys-logo.webp",
+          "description": "Fontys company logo"
+        }
+      ],
+      "projectVideo": [
+        {
+          "src": "https://youtu.be/5hxuvkYApc8",
+          "description": "Feature walkthrough: asset tracking in real time; air-quality sensing with a Thingy:52; live movement of sensors on the map; an inventory-style device list; editing device names; sorting the list; choosing which columns to show; adding a new device; reading the legend; and filtering by device type."
+        }
+      ],
+      "projectImages": [
+        {
+          "src": "/images/projects/showcase/smart-classroom.webp",
+          "description": "Smart Classroom screenshot from the demo video showing the dashboard with all the sensors, beacons and tags."
+        }
+      ],
+      "caseStudy": {
+        "problem": "Technology and IoT are often portrayed with robots at Fontys Open Days. But there's so much more to it. So how about showing what it could do within a classroom?",
+        "contributions": [
+          "Worked on the backend logic and data storage."
+        ],
+        "approach": "By having sensors continuously send data to the backend, you can track all sorts of things about a classroom such as the air quality. And using triangulation with beacons, you can even track the approximate location of a bluetooth tag in rooms.",
+        "result": "A fun showcase to show students what other applications of the subjects Technology and IoT are possible at Fontys."
+      }
+    },
+    {
+      "id": "yookr-internship",
+      "company": "Yookr",
+      "title": "Yookr Monitoring Tool",
+      "role": "Software Development Intern",
+      "duration": "Sept 2024 - Feb 2025",
+      "description": "Designed and developed a service-monitoring prototype during my internship. Combined service logs, warnings, errors, and performance metrics in a dashboard to help the team understand application health.",
+      "skills": [
+        {
+          "name": "React",
+          "usage": "Built interactive monitoring dashboard."
+        },
+        {
+          "name": "Node.js",
+          "usage": "Backend APIs."
+        },
+        {
+          "name": "JavaScript",
+          "usage": "Frontend functionality."
+        },
+        {
+          "name": "MySQL",
+          "usage": "Relational storage for config & metrics."
+        },
+        {
+          "name": "Next.js",
+          "usage": "Server-side rendering for web UI."
+        },
+        {
+          "name": "Git",
+          "usage": "Source control."
+        },
+        {
+          "name": "Agile",
+          "usage": "Sprint-driven development."
+        },
+        {
+          "name": "REST APIs",
+          "usage": "Service endpoints."
+        },
+        {
+          "name": "Problem Solving",
+          "usage": "Debugging production issues."
+        },
+        {
+          "name": "Team Coordination",
+          "usage": "Cross-team communication."
+        },
+        {
+          "name": "Rust",
+          "usage": "High-performance service components."
+        },
+        {
+          "name": "Actix-web",
+          "usage": "Rust web framework for microservices."
+        },
+        {
+          "name": "Docker",
+          "usage": "Containerized services. The logs were also gotten from there."
+        },
+        {
+          "name": "Figma",
+          "usage": "Design & prototyping."
+        }
+      ],
+      "type": "internship",
+      "images": [
+        {
+          "src": "/images/companies/yookr-logo.webp",
+          "description": "Yookr company logo"
+        }
+      ],
+      "projectImages": [
+        {
+          "src": "/images/projects/showcase/monitoringtool.webp",
+          "description": "This image shows the health and current status of the monitored services. This was colour coded based on warning and error logs, with black being fully down."
+        },
+        {
+          "src": "/images/projects/showcase/monitoringtool-performance.webp",
+          "description": "Here you can see the page that tracked performance metrics for each environment and service."
+        }
+      ],
+      "caseStudy": {
+        "problem": "Yookr had a lot of applications it was developing and testing but barely any way to monitor them. This created a lot of time loss when anything went wrong.",
+        "contributions": [
+          "Created a tool that shows the current status of applications, shows error logs and current performance metrics."
+        ],
+        "approach": "All applications were put in docker containers. Using the bollard crate, the application got all information that the developers wanted and showed them on a webpage. I then set up a Raspberry Pi to have the site open at all times so we could show the main screen on a monitor within the office and immediately see if an application was experiencing a problem.",
+        "result": "It was adopted immediately, though not long after we switched to Kubernetes and on that using Prometheus and Grafana we replaced my application."
+      }
+    },
+    {
+      "id": "bdo-database-validator",
+      "company": "BDO",
+      "title": "Database Schema Validator",
+      "role": "Partner Project",
+      "duration": "Feb 2025 - June 2025",
+      "description": "Developed a TypeScript tool with a team to compare database schemas daily and report changes to Microsoft Teams. Led the design of schema extraction queries for MySQL and SQL Server.",
+      "caseStudy": {
+        "problem": "The software team needed visibility into database schema changes made by the data team.",
+        "contributions": [
+          "Led the design of queries to extract schema metadata from MySQL and SQL Server.",
+          "Contributed to the TypeScript comparison and reporting tool."
+        ],
+        "approach": "Extract schema metadata into rows, compare database schemas, and post a daily changelog to Microsoft Teams.",
+        "result": "Delivered a schema comparison and reporting tool that makes database changes visible to the software team."
+      },
+      "skills": [
+        {
+          "name": "Node.js",
+          "usage": "Automation scripts and services."
+        },
+        {
+          "name": "TypeScript",
+          "usage": "Typed development for reliability."
+        },
+        {
+          "name": "MySQL",
+          "usage": "Extracted database schema metadata."
+        },
+        {
+          "name": "SQL Server",
+          "usage": "Extracted database schema metadata for comparison."
+        },
+        {
+          "name": "SQL",
+          "usage": "MSSQL and MySQL queries to get schema information neatly sorted into rows."
+        },
+        {
+          "name": "Azure",
+          "usage": "Cloud resources and functions."
+        },
+        {
+          "name": "DevOps",
+          "usage": "CI/CD and automation."
+        },
+        {
+          "name": "Git",
+          "usage": "Version control."
+        },
+        {
+          "name": "Agile",
+          "usage": "Team ceremonies."
+        },
+        {
+          "name": "REST APIs",
+          "usage": "Service endpoints."
+        },
+        {
+          "name": "Problem Solving",
+          "usage": "Investigations and diagnostics."
+        },
+        {
+          "name": "Team Coordination",
+          "usage": "Stakeholder communication."
+        }
+      ],
+      "type": "project",
+      "images": [
+        {
+          "src": "/images/companies/bdo-logo.webp",
+          "description": "BDO company logo"
+        }
+      ],
+      "projectImages": [
+        {
+          "src": "/images/projects/showcase/bdo-database-validator.webp",
+          "description": "Image showing the general design and idea of the database validator."
+        },
+        {
+          "src": "/images/projects/presentation.webp",
+          "description": "Me presenting at the BDO office after successfully completing the project."
+        },
+        {
+          "src": "/images/projects/jordy-linkedin-reaction.webp",
+          "description": "Reaction from our stakeholder after the project"
+        }
+      ]
+    },
+    {
+      "id": "yookr-backend",
+      "company": "Yookr",
+      "title": "IoT Data Processing & Backend API Development",
+      "role": "Software Developer",
+      "duration": "Mar 2025 - Present",
+      "description": "Develop backend services and APIs for IoT applications at Yookr. Work includes receiving sensor data, storing it in MySQL, building Rust services with Actix-web, and managing containerized applications with Docker and Kubernetes.",
+      "caseStudy": {
+        "problem": "IoT applications need to receive data from different devices, store it, and expose it through usable service interfaces.",
+        "contributions": [
+          "Develop Rust backend services and REST APIs using Actix-web.",
+          "Implement sensor-data ingestion and MySQL storage.",
+          "Work with Docker and Kubernetes to manage containerized applications."
+        ],
+        "approach": "Connect IoT data ingestion with database storage and backend APIs in a microservices architecture. Work with LoRaWAN devices where required.",
+        "result": "Contribute backend services that support Yookr’s IoT applications, alongside frontend work in Next.js."
+      },
+      "skills": [
+        {
+          "name": "MySQL",
+          "usage": "Operational storage for services."
+        },
+        {
+          "name": "Next.js",
+          "usage": "I mainly use Next.js here for building our frontend applications."
+        },
+        {
+          "name": "Git",
+          "usage": "Version control."
+        },
+        {
+          "name": "REST APIs",
+          "usage": "Service interfaces."
+        },
+        {
+          "name": "Problem Solving",
+          "usage": "Making sure that the wishes of customers and stakeholders are met."
+        },
+        {
+          "name": "Team Coordination",
+          "usage": "We are a small team with a lot of part-time members so we need good coordination and communication to ensure everyone is on the same page."
+        },
+        {
+          "name": "Rust",
+          "usage": "Performance-critical backend components."
+        },
+        {
+          "name": "Actix-web",
+          "usage": "Rust web framework that I use for most backend projects."
+        },
+        {
+          "name": "Docker",
+          "usage": "Containers for deployment."
+        },
+        {
+          "name": "Kubernetes",
+          "usage": "I use Kubernetes to manage containerized applications in a microservices architecture."
+        },
+        {
+          "name": "IoT",
+          "usage": "We have various IoT devices that I have to make work together seamlessly."
+        },
+        {
+          "name": "LoRaWAN",
+          "usage": "Long-range device communication that some of our IoT devices use. I have experience on managing LoRaWAN networks and devices."
+        },
+        {
+          "name": "MongoDB",
+          "usage": ""
+        },
+        {
+          "name": "Keycloak",
+          "usage": ""
+        }
+      ],
+      "type": "job",
+      "images": [
+        {
+          "src": "/images/companies/yookr-logo.webp",
+          "description": "Yookr company logo"
+        }
+      ],
+      "projectImages": [
+        {
+          "src": "/images/projects/yookrpresentation.webp",
+          "description": "Presentation at an event where we showcase what Yookr employees have been working on to the public."
+        },
+        {
+          "src": "/images/uploads/232739b3-b90c-47c1-b2a0-5c01a5dcce36.png",
+          "description": "Kubernetes Management System that I build and showcased publically. It's essentially a way more advanced version of the Yookr Monitoring Tool."
+        }
+      ]
+    },
+    {
+      "id": "poppythorn",
+      "caseStudy": {
+        "problem": "A fantasy world needs a way for readers to explore its lore, people, and places. And a writer, me, needs a place where I can put all the ideas for stories I've had over the years.",
+        "contributions": [
+          "Created the encyclopedia application for my world of Sadiphus.",
+          "Built an interactive 3D world view using React Three Fiber.",
+          "Written all the stories, locations and characters myself."
+        ],
+        "approach": "Use React, TypeScript, and Next.js for the interface, SQLite for data, and S3 storage for images and assets.",
+        "result": "Published Poppythorn.nl as an interactive way to explore the world and its encyclopedia."
+      },
+      "company": "Personal Project",
+      "title": "Poppythorn.nl",
+      "role": "Creator",
+      "duration": "2025 - Present",
+      "description": "The definitive encyclopedia for my fantasy world of Sadiphus. Discover the lore, people, and places that shape this realm. This project is a way for people to interact with the world that I'm creating in a fun and engaging way.",
+      "skills": [
+        {
+          "name": "React",
+          "usage": "Frontend UI component structure."
+        },
+        {
+          "name": "TypeScript",
+          "usage": "Type safety for the application."
+        },
+        {
+          "name": "Next.js",
+          "usage": "Framework for server-side rendering and routing."
+        },
+        {
+          "name": "S3",
+          "usage": "Storage for user-uploaded images and assets."
+        },
+        {
+          "name": "React Three Fiber",
+          "usage": "Interactive 3D view of the world."
+        },
+        {
+          "name": "SQLite",
+          "usage": "Relational database for storing encyclopedia data."
+        },
+        {
+          "name": "Google Search Console",
+          "usage": "Managing indexed pages and images with metadata."
+        },
+        {
+          "name": "Auth0",
+          "usage": "Authentication/Authorisation to make changes to the site."
+        }
+      ],
+      "type": "project",
+      "url": "https://poppythorn.nl",
+      "images": [
+        {
+          "src": "/images/projects/poppythorn/welcome.png",
+          "description": "Home screen"
+        },
+        {
+          "src": "/images/uploads/46ccc159-7995-4264-80c7-5f1ca4fa2d37.png",
+          "description": "Page showing one of my characters"
+        }
+      ],
+      "projectImages": [
+        {
+          "src": "/images/projects/poppythorn/3d-view.png",
+          "description": "3D view of the world created with React Three Fiber"
+        },
+        {
+          "src": "/images/projects/poppythorn/content.png",
+          "description": "Encyclopedia content page, this example shows a country page"
+        }
+      ]
+    },
+    {
+      "id": "sielfavs",
+      "company": "Personal Project",
+      "title": "Media Vault",
+      "role": "Creator",
+      "duration": "January 2026 - February 2026",
+      "description": "A centralized media management hub that tracks my collection across multiple platforms. It features real-time Steam achievements and playtime tracking, MyAnimeList integration for anime/manga progress, and TMDB for movies and TV shows. The project uses a high-performance Rust backend deployed as Cloudflare Workers.",
+      "skills": [
+        {
+          "name": "Next.js",
+          "usage": "Built the frontend dashboard with server-side rendering."
+        },
+        {
+          "name": "React",
+          "usage": "Developed interactive UI components and state management."
+        },
+        {
+          "name": "TypeScript",
+          "usage": "Ensured type safety across the full stack."
+        },
+        {
+          "name": "Rust",
+          "usage": "Implemented high-performance backend microservices."
+        },
+        {
+          "name": "Cloudflare Workers",
+          "usage": "Serverless platform for API gateway and services."
+        },
+        {
+          "name": "Cloudflare D1",
+          "usage": "Managed SQL database for persistent storage."
+        },
+        {
+          "name": "Tailwind CSS",
+          "usage": "Responsive and modern UI styling."
+        },
+        {
+          "name": "REST APIs",
+          "usage": "Integrated third-party data from Steam, MAL, and TMDB."
+        },
+        {
+          "name": "Auth0",
+          "usage": "Secure user authentication and authorization."
+        }
+      ],
+      "type": "project",
+      "url": "https://media.yourivanbaal.nl",
+      "images": [
+        {
+          "src": "/images/projects/sielfavs/games.webp",
+          "description": "Games Overview - Steam stats and achievement tracking"
+        }
+      ],
+      "projectImages": [
+        {
+          "src": "/images/projects/sielfavs/game-analysis.webp",
+          "description": "Game Analysis - Detailed statistics and progress for games that I have played"
+        },
+        {
+          "src": "/images/projects/sielfavs/games.webp",
+          "description": "Games Library - Collection of my favourite games and games that I am currently playing"
+        },
+        {
+          "src": "/images/projects/sielfavs/music.webp",
+          "description": "Music Collection - Collection of my favourite music"
+        }
+      ],
+      "caseStudy": {
+        "problem": "People often ask me for my favourite shows, movies, music or games. But quite often I just can't think of the ones I want to say or they don't know what I'm talking about.",
+        "contributions": [
+          "Connected relevant API for all categories and made sure to comply with their terms of service.",
+          "Created data analysis based on received data."
+        ],
+        "approach": "In my own admin panel, I can add favourites for every category using the external API listed on the relevant page. From there I save them in a database with link to the original API so not every page visit requires a call to the external API.\n\nFor game analysis. When using Steam's API, you can get a lot of data about the user's games, some of those include the genres, time spend playing and achievement completion percentage. Based on that I created some fun stats that I wanted to see for myself but also explains a lot about me as a person (Such as my love for Hack&Slash, RPG and Strategy games).",
+        "result": "Nice and easy overview site that I can show people to have them instantly get a feeling on who I am as a person."
+      }
+    }
+  ]
+}
