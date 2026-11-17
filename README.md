@@ -4,7 +4,7 @@ React, TypeScript, and Vite portfolio for https://yourivanbaal.nl.
 
 ## Local development
 
-Use Node.js 22.18 or a compatible newer version and run:
+Use Node.js 22.18 or newer (verified with Node.js 24.22.1) and run:
 
 ```sh
 npm ci
@@ -38,7 +38,11 @@ npm run test:editor
 npm run build
 ```
 
-Lint covers the maintained portfolio components, content modules, and editor. TypeScript checks the application and editor entry points and their imported dependencies, plus the Vite configuration. Unused Figma-generated UI components are outside that check. Editor integration tests use a temporary project and verify persistence, backup, conflicting revisions, origin restrictions, validation, and image uploads.
+Run `npm run check` to execute all four checks in order.
+
+The current toolchain uses TypeScript 7.0.2, Vite 8.3.8, React 19.3.1, and Oxlint 1.94.0. Oxlint replaces ESLint and its TypeScript parser, avoiding the old parser's TypeScript version restriction. It retains the previous checks and also checks React hook ordering. No peer-dependency bypass flags are required.
+
+Lint and TypeScript now cover all source components, including the generated UI wrappers, the editor, TypeScript scripts, and the Vite configuration. Editor integration tests use a temporary project and verify persistence, backup, conflicting revisions, origin restrictions, validation, and image uploads.
 
 See [PORTFOLIO_CHECKLIST.md](./PORTFOLIO_CHECKLIST.md) for remaining CV/content work and corrections to the screenshot-based advice.
 

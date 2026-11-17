@@ -12,9 +12,8 @@
     "types": ["node", "vite/client"]
   },
   "include": [
-    "src/main.tsx",
-    "src/image-modules.d.ts",
-    "vite.config.mts",
-    "src/editor/main.tsx"
+    "src",
+    "scripts/*.ts",
+    "vite.config.mts"
   ]
 }

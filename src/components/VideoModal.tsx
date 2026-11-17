@@ -4,22 +4,24 @@ import Portal from './Portal';
 type Video = { url: string; title?: string; description?: React.ReactNode } | null;
 
 export default function VideoModal({ video, onClose }: { video: Video; onClose: () => void }) {
-  if (!video) return null;
-
   // Prevent the opening click from immediately closing the modal
   const ignoreClicksUntil = React.useRef<number>(0);
   React.useEffect(() => {
+    if (!video) return;
     ignoreClicksUntil.current = performance.now() + 250;
-  }, []);
+  }, [video]);
 
   // Close on Escape
   React.useEffect(() => {
+    if (!video) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
     };
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
-  }, [onClose]);
+  }, [video, onClose]);
+
+  if (!video) return null;
   
   let safeUrl: string | null = null;
   try {

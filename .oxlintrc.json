@@ -1,0 +1,14 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "import", "react"],
+  "categories": { "correctness": "off" },
+  "env": { "browser": true, "node": true },
+  "rules": {
+    "eslint/no-debugger": "error",
+    "eslint/no-dupe-keys": "error",
+    "eslint/no-constant-condition": "error",
+    "import/no-duplicates": "error",
+    "eslint/no-unused-vars": ["error", { "args": "none", "caughtErrors": "none", "varsIgnorePattern": "^_" }],
+    "react/rules-of-hooks": "error"
+  }
+}
